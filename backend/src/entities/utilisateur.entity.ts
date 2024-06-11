@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { Compte } from './compte.entity';
+import { Direction } from './direction.entity';
 
 @Entity()
 export class Utilisateur {
@@ -14,9 +23,11 @@ export class Utilisateur {
   @Column()
   matricule: string;
 
-  @Column()
+  @ManyToOne(() => Compte)
+  @JoinColumn()
   access_util: string;
 
-  @Column()
+  @ManyToOne(() => Direction)
+  @JoinColumn()
   direction_util: string;
 }

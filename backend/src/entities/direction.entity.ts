@@ -1,10 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Profile {
+export class Direction {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  @Column({ unique: true })
-  libeleFunction: string;
+  @Column()
+  nom_direction: string;
 }

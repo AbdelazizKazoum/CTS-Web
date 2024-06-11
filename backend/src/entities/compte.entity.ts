@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class Compte {
@@ -8,6 +16,10 @@ export class Compte {
   @Column()
   pseudo: string;
 
+  @ManyToOne(() => Profile)
+  @JoinColumn()
+  function: number;
+
   @Column()
-  passe: string;
+  pass: string;
 }
