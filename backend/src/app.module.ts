@@ -10,6 +10,7 @@ import { Compte } from './entities/compte.entity';
 import { ProfileModule } from './profile/profile.module';
 import { Profile } from './entities/profile.entity';
 import { DirectionModule } from './direction/direction.module';
+import { Direction } from './entities/direction.entity';
 
 @Module({
   imports: [
@@ -18,9 +19,9 @@ import { DirectionModule } from './direction/direction.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '051688',
+      password: '051688aziz',
       database: 'cts_web',
-      entities: [Utilisateur, Compte, Profile],
+      entities: [Utilisateur, Compte, Profile, Direction],
       synchronize: true,
     }),
     UtilisateurModule,

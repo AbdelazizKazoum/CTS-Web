@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Compte } from './compte.entity';
 
 @Entity()
 export class Profile {
@@ -7,4 +14,8 @@ export class Profile {
 
   @Column({ unique: true })
   libeleFunction: string;
+
+  @OneToMany(() => Compte, (compte) => compte.fonction)
+  @JoinColumn()
+  compts: Compte[];
 }

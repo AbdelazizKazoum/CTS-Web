@@ -5,6 +5,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Compte } from './compte.entity';
 import { Direction } from './direction.entity';
@@ -25,9 +26,9 @@ export class Utilisateur {
 
   @ManyToOne(() => Compte)
   @JoinColumn()
-  access_util: string;
+  access_util: Compte;
 
-  @ManyToOne(() => Direction)
+  @ManyToOne(() => Direction, (direction) => direction.utilisateurs)
   @JoinColumn()
-  direction_util: string;
+  direction: Direction;
 }

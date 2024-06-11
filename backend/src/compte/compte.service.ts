@@ -15,7 +15,7 @@ export class CompteService {
   async create(createCompteDto: CreateCompteDto) {
     const newCompte = await this.compteRepository.create({
       pseudo: createCompteDto.pseudo,
-      passe: createCompteDto.passe,
+      pass: createCompteDto.passe,
     });
 
     return await this.compteRepository.save(newCompte);

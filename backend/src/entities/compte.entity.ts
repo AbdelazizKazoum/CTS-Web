@@ -16,9 +16,9 @@ export class Compte {
   @Column()
   pseudo: string;
 
-  @ManyToOne(() => Profile)
+  @ManyToOne(() => Profile, (profile) => profile.compts)
   @JoinColumn()
-  function: number;
+  fonction: Profile;
 
   @Column()
   pass: string;
