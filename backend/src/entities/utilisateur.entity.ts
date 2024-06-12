@@ -24,9 +24,9 @@ export class Utilisateur {
   @Column()
   matricule: string;
 
-  @ManyToOne(() => Compte)
-  @JoinColumn()
-  access_util: Compte;
+  // @OneToOne(() => Compte)
+  // @JoinColumn()
+  // access_util: Compte;
 
   @ManyToOne(() => Direction, (direction) => direction.utilisateurs)
   @JoinColumn()

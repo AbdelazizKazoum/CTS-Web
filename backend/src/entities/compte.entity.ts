@@ -1,9 +1,11 @@
+import { Utilisateur } from 'src/entities/utilisateur.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
@@ -15,6 +17,10 @@ export class Compte {
 
   @Column()
   pseudo: string;
+
+  @OneToOne(() => Utilisateur)
+  @JoinColumn()
+  utilisateur: Utilisateur;
 
   @ManyToOne(() => Profile, (profile) => profile.compts)
   @JoinColumn()

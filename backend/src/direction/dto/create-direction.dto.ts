@@ -1,1 +1,3 @@
-export class CreateDirectionDto {}
+export class CreateDirectionDto {
+  nom_direction: string;
+}

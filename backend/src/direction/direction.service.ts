@@ -1,11 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateDirectionDto } from './dto/create-direction.dto';
 import { UpdateDirectionDto } from './dto/update-direction.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Direction } from 'src/entities/direction.entity';
 
 @Injectable()
 export class DirectionService {
-  create(createDirectionDto: CreateDirectionDto) {
-    return 'This action adds a new direction';
+  constructor(
+    @InjectRepository(Direction)
+    private directionRepository: Repository<Direction>,
+  ) {}
+
+  async create(createDirectionDto: CreateDirectionDto) {
+    try {
+      const newDirection =
+        await this.directionRepository.create(createDirectionDto);
+
+      return await this.directionRepository.save(newDirection);
+    } catch (error) {
+      return new InternalServerErrorException(error.message);
+    }
   }
 
   findAll() {
