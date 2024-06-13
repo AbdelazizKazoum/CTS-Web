@@ -24,7 +24,7 @@ export class Compte {
 
   @ManyToOne(() => Profile, (profile) => profile.compts)
   @JoinColumn()
-  fonction: Profile;
+  profile: Profile;
 
   @Column()
   pass: string;

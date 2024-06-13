@@ -15,7 +15,7 @@ export class Profile {
   @Column({ unique: true })
   libeleFunction: string;
 
-  @OneToMany(() => Compte, (compte) => compte.fonction)
+  @OneToMany(() => Compte, (compte) => compte.profile)
   @JoinColumn()
   compts: Compte[];
 }

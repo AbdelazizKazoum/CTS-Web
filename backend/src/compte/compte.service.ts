@@ -3,7 +3,10 @@ import { CreateCompteDto } from './dto/create-compte.dto';
 import { UpdateCompteDto } from './dto/update-compte.dto';
 import { Compte } from 'src/entities/compte.entity';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+
+const salt = 10;
 
 @Injectable()
 export class CompteService {
@@ -13,12 +16,25 @@ export class CompteService {
   ) {}
 
   async create(createCompteDto: CreateCompteDto) {
-    const newCompte = await this.compteRepository.create({
-      pseudo: createCompteDto.pseudo,
-      pass: createCompteDto.passe,
-    });
+    console.log('hello from the service !!!');
 
-    return await this.compteRepository.save(newCompte);
+    try {
+      const password = createCompteDto.passe;
+      console.log('test');
+      console.log(password);
+      console.log(createCompteDto);
+
+      const hashPass = await bcrypt.hash(password, salt);
+
+      const newCompte = await this.compteRepository.create({
+        ...createCompteDto,
+        pass: hashPass,
+      });
+
+      return await this.compteRepository.save(newCompte);
+    } catch (error) {
+      return new InternalServerErrorException(error.message);
+    }
   }
 
   async findAll() {

@@ -17,6 +17,7 @@ export class CompteController {
 
   @Post()
   async create(@Body() createCompteDto: CreateCompteDto) {
+    console.log('hello from the controller !!!');
     return await this.compteService.create(createCompteDto);
   }
 

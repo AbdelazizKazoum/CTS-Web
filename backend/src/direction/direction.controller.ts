@@ -17,6 +17,7 @@ export class DirectionController {
 
   @Post()
   async create(@Body() createDirectionDto: CreateDirectionDto) {
+    console.log(createDirectionDto.nom_direction);
     return await this.directionService.create(createDirectionDto);
   }
 
