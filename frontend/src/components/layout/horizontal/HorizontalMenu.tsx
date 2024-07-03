@@ -89,7 +89,7 @@ const HorizontalMenu = () => {
           Home
         </MenuItem>
         <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
-          About
+          Utilisateurs
         </MenuItem>
       </Menu>
       {/* <Menu

@@ -4,6 +4,6 @@ import { Utilisateur } from 'src/entities/utilisateur.entity';
 export class CreateCompteDto {
   pseudo: string;
   passe: string;
-  profileId: Profile;
-  utilisateurId: Utilisateur;
+  profile: Profile;
+  utilisateur: Utilisateur;
 }
