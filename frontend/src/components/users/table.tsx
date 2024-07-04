@@ -1,14 +1,22 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Link from 'next/link'
 
-import { Card, Checkbox, Icon, IconButton, TablePagination, Typography } from '@mui/material'
-
+import {
+  Button,
+  Card,
+  Checkbox,
+  Icon,
+  IconButton,
+  MenuItem,
+  TablePagination,
+  TextFieldProps,
+  Typography
+} from '@mui/material'
 
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
-
 
 import {
   createColumnHelper,
@@ -28,13 +36,11 @@ import classNames from 'classnames'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-
 import type { UtilisateurType } from '@/types/userTypes'
 import TablePaginationComponent from '../TablePaginationComponent'
 
-
 import OptionMenu from '@/@core/components/option-menu'
-
+import CustomTextField from '@/@core/components/mui/TextField'
 
 type UsersTypeWithAction = UtilisateurType & {
   action?: string
@@ -43,16 +49,12 @@ type UsersTypeWithAction = UtilisateurType & {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-
-export const Table = ( {data} : {data : UtilisateurType[]} ) => {
-
-
-    // States
-    const [addUserOpen, setAddUserOpen] = useState(false)
-    const [rowSelection, setRowSelection] = useState({})
-    const [filteredData, setFilteredData] = useState(data)
-    const [globalFilter, setGlobalFilter] = useState('')
-
+export const Table = ({ data }: { data: UtilisateurType[] }) => {
+  // States
+  const [addUserOpen, setAddUserOpen] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
+  const [filteredData, setFilteredData] = useState(data)
+  const [globalFilter, setGlobalFilter] = useState('')
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -65,6 +67,35 @@ export const Table = ( {data} : {data : UtilisateurType[]} ) => {
 
     // Return if the item should be filtered in/out
     return itemRank.passed
+  }
+
+  const DebouncedInput = ({
+    value: initialValue,
+    onChange,
+    debounce = 500,
+    ...props
+  }: {
+    value: string | number
+    onChange: (value: string | number) => void
+    debounce?: number
+  } & Omit<TextFieldProps, 'onChange'>) => {
+    // States
+    const [value, setValue] = useState(initialValue)
+
+    useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        onChange(value)
+      }, debounce)
+
+      return () => clearTimeout(timeout)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value])
+
+    return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
   }
 
   const columns = useMemo<ColumnDef<UsersTypeWithAction, any>[]>(
@@ -113,11 +144,41 @@ export const Table = ( {data} : {data : UtilisateurType[]} ) => {
           </div>
         )
       }),
+      columnHelper.accessor('matricule', {
+        header: 'Matricule',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original.matricule}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('direction', {
+        header: 'Direction',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original.direction}
+            </Typography>
+          </div>
+        )
+      }),
+      columnHelper.accessor('compte', {
+        header: 'Compte',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original.compte}
+            </Typography>
+          </div>
+        )
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton >
+            <IconButton>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
@@ -184,7 +245,43 @@ export const Table = ( {data} : {data : UtilisateurType[]} ) => {
   return (
     <div>
       <Card>
-      <div className='overflow-x-auto'>
+        <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
+          <CustomTextField
+            select
+            value={table.getState().pagination.pageSize}
+            onChange={e => table.setPageSize(Number(e.target.value))}
+            className='is-[70px]'
+          >
+            <MenuItem value='10'>10</MenuItem>
+            <MenuItem value='25'>25</MenuItem>
+            <MenuItem value='50'>50</MenuItem>
+          </CustomTextField>
+          <div className='flex flex-col sm:flex-row is-full sm:is-auto items-start sm:items-center gap-4'>
+            <DebouncedInput
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder='Search User'
+              className='is-full sm:is-auto'
+            />
+            <Button
+              color='secondary'
+              variant='tonal'
+              startIcon={<i className='tabler-upload' />}
+              className='is-full sm:is-auto'
+            >
+              Export
+            </Button>
+            <Button
+              variant='contained'
+              startIcon={<i className='tabler-plus' />}
+              onClick={() => setAddUserOpen(!addUserOpen)}
+              className='is-full sm:is-auto'
+            >
+              Add New User
+            </Button>
+          </div>
+        </div>
+        <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -248,7 +345,6 @@ export const Table = ( {data} : {data : UtilisateurType[]} ) => {
             table.setPageIndex(page)
           }}
         />
-
       </Card>
     </div>
   )
