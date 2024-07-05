@@ -24,7 +24,7 @@ export class UtilisateurService {
     }
   }
 
-  findOne(id: number): Promise<Utilisateur | null> {
-    return this.utilisateurRepository.findOneBy({ id });
+  async findOne(cin: string): Promise<Utilisateur | null> {
+    return await this.utilisateurRepository.findOneBy({ cin });
   }
 }

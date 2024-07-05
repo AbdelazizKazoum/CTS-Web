@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { Request, RequestHandler } from 'express';
 import { UtilisateurService } from './utilisateur.service';
 import { UtilisateurModule } from './utilisateur.module';
@@ -12,6 +12,11 @@ export class UtilisateurController {
   @Get()
   async getAll(): Promise<Utilisateur[]> {
     return await this.utilisateurService.findAll();
+  }
+
+  @Get()
+  async getByCin(@Param('cin') cin: string): Promise<Utilisateur> {
+    return await this.utilisateurService.findOne(cin);
   }
 
   @Post()

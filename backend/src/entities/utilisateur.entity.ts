@@ -19,6 +19,9 @@ export class Utilisateur {
   nom: string;
 
   @Column()
+  cin: string;
+
+  @Column()
   prenom: string;
 
   @Column()

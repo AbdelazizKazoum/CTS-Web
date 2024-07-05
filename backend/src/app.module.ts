@@ -11,6 +11,7 @@ import { ProfileModule } from './profile/profile.module';
 import { Profile } from './entities/profile.entity';
 import { DirectionModule } from './direction/direction.module';
 import { Direction } from './entities/direction.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { Direction } from './entities/direction.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '051688azizKazoum@',
+      password: '051688',
       database: 'cts_web',
       entities: [Utilisateur, Compte, Profile, Direction],
       synchronize: true,
@@ -28,6 +29,7 @@ import { Direction } from './entities/direction.entity';
     CompteModule,
     ProfileModule,
     DirectionModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
