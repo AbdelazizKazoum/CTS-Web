@@ -12,8 +12,11 @@ export class UtilisateurService {
   ) {}
 
   async findAll(): Promise<Utilisateur[]> {
-    return await this.utilisateurRepository.find();
+    return await this.utilisateurRepository.find({
+      relations: ['direction'],
+    });
   }
+
   async createUser(createUserDto: CreateUserDto) {
     try {
       const newUser = await this.utilisateurRepository.create(createUserDto);

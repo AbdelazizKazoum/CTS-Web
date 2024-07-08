@@ -43,6 +43,7 @@ import TablePaginationComponent from '../TablePaginationComponent'
 import OptionMenu from '@/@core/components/option-menu'
 import CustomTextField from '@/@core/components/mui/TextField'
 import TableFilters from './tableFilters'
+import AddUserDrawer from './addUserDrawer'
 
 type UsersTypeWithAction = UtilisateurType & {
   action?: string
@@ -51,7 +52,7 @@ type UsersTypeWithAction = UtilisateurType & {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
+export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) => {
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
@@ -59,7 +60,6 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   const [data, setData] = useState(...[tableData])
-
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -164,7 +164,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Typography className='capitalize' color='text.primary'>
-              {row.original.direction}
+              {row.original.direction.nom_direction}
             </Typography>
           </div>
         )
@@ -250,8 +250,8 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
   return (
     <div>
       <Card>
-      <CardHeader title='Filters' className='pbe-4' />
-      <TableFilters setData={setData} tableData={tableData} />
+        <CardHeader title='Filters' className='pbe-4' />
+        <TableFilters setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -289,7 +289,6 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
           </div>
         </div>
         <div className='overflow-x-auto'>
-
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -343,7 +342,6 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
               </tbody>
             )}
           </table>
-
         </div>
         <TablePagination
           component={() => <TablePaginationComponent table={table} />}
@@ -355,6 +353,12 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
           }}
         />
       </Card>
+      <AddUserDrawer
+        open={addUserOpen}
+        handleClose={() => setAddUserOpen(!addUserOpen)}
+        userData={data}
+        setData={setData}
+      />
     </div>
   )
 }

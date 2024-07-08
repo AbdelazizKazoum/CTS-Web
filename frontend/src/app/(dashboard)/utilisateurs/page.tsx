@@ -1,45 +1,46 @@
-
-
+/* eslint-disable padding-line-between-statements */
+'use client'
+import { useEffect } from 'react'
 
 import UserList from '@/components/users/userList'
 
-import { UtilisateurType } from '@/types/userTypes'
+import type { UtilisateurType } from '@/types/userTypes'
+
+import { UseUtilisateurStore } from '@/store/utilisateur.store'
 
 const users = [
   {
     id: 1,
 
-    nom: "maaroufi",
+    nom: 'maaroufi',
 
-    prenom: "mouad",
+    prenom: 'mouad',
 
-    matricule: "66003/c",
+    matricule: '66003/c',
 
     compte: 1,
 
-    direction: 1,
+    direction: 1
   },
   {
     id: 2,
 
-    nom: "kazoum",
+    nom: 'kazoum',
 
-    prenom: "abdelaziz",
+    prenom: 'abdelaziz',
 
-    matricule: "66006/c",
+    matricule: '66006/c',
 
     compte: 2,
 
-    direction: 2,
+    direction: 2
   }
-
 ] as UtilisateurType[]
 
-export default function page(){
-
-    return (<div>
-        <UserList data={users} />
-    </div>)
-
+export default function Page() {
+  return (
+    <div>
+      <UserList data={users} />
+    </div>
+  )
 }
-
