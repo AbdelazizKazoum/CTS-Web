@@ -6,6 +6,7 @@ import Link from 'next/link'
 import {
   Button,
   Card,
+  CardHeader,
   Checkbox,
   Icon,
   IconButton,
@@ -41,6 +42,7 @@ import TablePaginationComponent from '../TablePaginationComponent'
 
 import OptionMenu from '@/@core/components/option-menu'
 import CustomTextField from '@/@core/components/mui/TextField'
+import TableFilters from './tableFilters'
 
 type UsersTypeWithAction = UtilisateurType & {
   action?: string
@@ -49,12 +51,15 @@ type UsersTypeWithAction = UtilisateurType & {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>()
 
-export const Table = ({ data }: { data: UtilisateurType[] }) => {
+export const Table = ({ tableData }: { tableData: UtilisateurType[] }) => {
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [filteredData, setFilteredData] = useState(data)
+  // const [filteredData, setFilteredData] = useState()
   const [globalFilter, setGlobalFilter] = useState('')
+
+  const [data, setData] = useState(...[tableData])
+
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -240,11 +245,13 @@ export const Table = ({ data }: { data: UtilisateurType[] }) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  console.log(table)
+  console.log(tableData)
 
   return (
     <div>
       <Card>
+      <CardHeader title='Filters' className='pbe-4' />
+      <TableFilters setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -282,6 +289,7 @@ export const Table = ({ data }: { data: UtilisateurType[] }) => {
           </div>
         </div>
         <div className='overflow-x-auto'>
+
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -335,6 +343,7 @@ export const Table = ({ data }: { data: UtilisateurType[] }) => {
               </tbody>
             )}
           </table>
+
         </div>
         <TablePagination
           component={() => <TablePaginationComponent table={table} />}

@@ -11,7 +11,7 @@ const UserList = ({ data }: { data: UtilisateurType[] }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}>
-          <Table data={data} />
+          <Table tableData={data} />
         </Grid>
       </Grid>
     </div>
