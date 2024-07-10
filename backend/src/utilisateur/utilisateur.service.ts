@@ -28,6 +28,9 @@ export class UtilisateurService {
   }
 
   async findOne(cin: string): Promise<Utilisateur | null> {
-    return await this.utilisateurRepository.findOneBy({ cin });
+    return await this.utilisateurRepository.findOne({
+      where: { cin },
+      relations: ['direction'],
+    });
   }
 }

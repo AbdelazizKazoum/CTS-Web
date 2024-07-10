@@ -5,6 +5,7 @@ import { Compte } from 'src/entities/compte.entity';
 import { Repository } from 'typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Utilisateur } from 'src/entities/utilisateur.entity';
 
 const salt = 10;
 
@@ -43,6 +44,12 @@ export class CompteService {
 
   findOne(id: number) {
     return `This action returns a #${id} compte`;
+  }
+  findByUser(user: Utilisateur) {
+    return this.compteRepository.findOne({
+      where: { utilisateur: user },
+      relations: ['profile'],
+    });
   }
 
   update(id: number, updateCompteDto: UpdateCompteDto) {

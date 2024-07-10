@@ -3,9 +3,10 @@ import { UtilisateurController } from './utilisateur.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Utilisateur } from 'src/entities/utilisateur.entity';
 import { UtilisateurService } from './utilisateur.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Utilisateur])],
+  imports: [TypeOrmModule.forFeature([Utilisateur]), JwtModule],
   providers: [UtilisateurService],
   controllers: [UtilisateurController],
   exports: [TypeOrmModule],
