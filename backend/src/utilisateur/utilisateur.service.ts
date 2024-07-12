@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Utilisateur } from 'src/entities/utilisateur.entity';
 import { Repository } from 'typeorm';
@@ -19,6 +23,13 @@ export class UtilisateurService {
 
   async createUser(createUserDto: CreateUserDto) {
     try {
+      const check = await this.utilisateurRepository.findBy({
+        cin: createUserDto.cin,
+      });
+
+      if (check) {
+        throw new ConflictException('User already exists');
+      }
       const newUser = await this.utilisateurRepository.create(createUserDto);
 
       return await this.utilisateurRepository.save(newUser);

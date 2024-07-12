@@ -18,6 +18,7 @@ export class AuthService {
     if (!user) {
       return new UnauthorizedException();
     }
+    
     const compte = await this.compteService.findByUser(user);
 
     const payload = {

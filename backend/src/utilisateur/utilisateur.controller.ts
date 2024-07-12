@@ -35,6 +35,8 @@ export class UtilisateurController {
   }
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.utilisateurService.createUser(createUserDto);
   }
