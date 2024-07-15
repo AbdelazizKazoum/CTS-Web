@@ -1,10 +1,10 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Next Imports
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -34,6 +34,7 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
+import { UseAuthStore } from '@/store/auth.store'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -62,6 +63,19 @@ const MaskImg = styled('img')({
 const LoginV2 = ({ mode }: { mode: SystemMode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
+  const [password, setPassword] = useState('')
+  const [userCin, setUserCin] = useState('')
+
+  const { authData } = UseAuthStore()
+  const { login } = UseAuthStore()
+
+  useEffect(() => {
+    console.log('has changed :', authData)
+
+    if (authData?.token) {
+      redirect('/home')
+    }
+  }, [authData])
 
   // Vars
   const darkImg = '/images/pages/auth-mask-dark.png'
@@ -121,17 +135,25 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
             autoComplete='off'
             onSubmit={e => {
               e.preventDefault()
-              router.push('/')
+              login(password, userCin)
+              // router.push('/')
             }}
             className='flex flex-col gap-5'
           >
-            <CustomTextField autoFocus fullWidth label='Email or Username' placeholder='Enter your email or username' />
+            <CustomTextField
+              onChange={e => setUserCin(e.target.value)}
+              autoFocus
+              fullWidth
+              label='Email or Username'
+              placeholder='Enter your email or username'
+            />
             <CustomTextField
               fullWidth
               label='Password'
               placeholder='············'
               id='outlined-adornment-password'
               type={isPasswordShown ? 'text' : 'password'}
+              onChange={e => setPassword(e.target.value)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>

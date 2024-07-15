@@ -16,9 +16,9 @@ export class AuthService {
     const user = await this.utilisateurService.findOne(signInDto.cin);
 
     if (!user) {
-      return new UnauthorizedException();
+      return new UnauthorizedException('login failed !');
     }
-    
+
     const compte = await this.compteService.findByUser(user);
 
     const payload = {
@@ -27,6 +27,6 @@ export class AuthService {
       role: compte.profile.libeleFunction,
     };
 
-    return { token: await this.jwtService.signAsync(payload) };
+    return { payload, token: await this.jwtService.signAsync(payload) };
   }
 }

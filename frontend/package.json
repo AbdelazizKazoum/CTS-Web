@@ -1,6 +1,7 @@
 {
   "name": "vuexy-mui-nextjs-admin-template",
   "version": "2.0.0",
+  "commonjs": "true",
   "license": "Commercial",
   "private": true,
   "scripts": {
