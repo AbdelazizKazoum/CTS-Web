@@ -1,5 +1,5 @@
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -18,6 +18,7 @@ import { useForm, Controller } from 'react-hook-form'
 // Types Imports
 import type { UtilisateurType } from '@/types/userTypes'
 import { UseUtilisateurStore } from '@/store/utilisateur.store'
+import { useDirectionStore } from '@/store/direction.store'
 
 type Props = {
   open: boolean
@@ -53,9 +54,11 @@ const AddUserDrawer = (props: Props) => {
 
   //store
   const { createUser } = UseUtilisateurStore()
+  const { fetchDirections } = useDirectionStore()
 
   // States
   const [formData, setFormData] = useState<FormNonValidateType>(initialData)
+  const [loaded, setLoaded] = useState(false)
 
   // Hooks
   const {
@@ -91,6 +94,12 @@ const AddUserDrawer = (props: Props) => {
     handleClose()
     setFormData(initialData)
   }
+
+  useEffect(() => {
+    ;(async () => {
+      fetchDirections()
+    })()
+  }, [])
 
   return (
     <Drawer
