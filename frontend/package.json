@@ -4,6 +4,7 @@
   "commonjs": "true",
   "license": "Commercial",
   "private": true,
+  "proxy": "http://192.168.60.148:3000",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,5 +1,5 @@
 export interface AuthType {
-  userCredentials: {
+  userData: {
     id?: string | number
     nom: string
     prenom: string

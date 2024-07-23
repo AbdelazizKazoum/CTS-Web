@@ -9,6 +9,7 @@ export interface UtilisateurState {
   users: UtilisateurType[] | null
 
   fetchUsers: () => Promise<UtilisateurType[]>
+  createUser: (user: UtilisateurType) => Promise<UtilisateurType>
 }
 
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
@@ -25,6 +26,16 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       console.log('test data from the api :', data)
 
       return users
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  createUser: async (user: UtilisateurType) => {
+    try {
+      const { data } = await api.post('utilisateur', user)
+
+      return data
     } catch (error) {
       console.log(error)
     }

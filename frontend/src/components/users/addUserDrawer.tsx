@@ -12,13 +12,12 @@ import Divider from '@mui/material/Divider'
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
 
-
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
 
 // Types Imports
 import type { UtilisateurType } from '@/types/userTypes'
-
+import { UseUtilisateurStore } from '@/store/utilisateur.store'
 
 type Props = {
   open: boolean
@@ -52,6 +51,9 @@ const AddUserDrawer = (props: Props) => {
   // Props
   const { open, handleClose, userData, setData } = props
 
+  //store
+  const { createUser } = UseUtilisateurStore()
+
   // States
   const [formData, setFormData] = useState<FormNonValidateType>(initialData)
 
@@ -66,18 +68,17 @@ const AddUserDrawer = (props: Props) => {
       nom: '',
       prenom: '',
       matricule: '',
-      direction:  null,
+      direction: null,
       profile: null
     }
   })
 
   const onSubmit = (data: FormValidateType) => {
     const newUser: UtilisateurType = {
-      nom : data.nom,
-      prenom : data.prenom,
-      matricule : data.matricule,
-      direction : data.direction,
-      profile : data.profile,
+      nom: data.nom,
+      prenom: data.prenom,
+      matricule: data.matricule,
+      direction: data.direction
     }
 
     setData([...(userData ?? []), newUser])
@@ -194,7 +195,6 @@ const AddUserDrawer = (props: Props) => {
               </CustomTextField>
             )}
           />
-
 
           <div className='flex items-center gap-4'>
             <Button variant='contained' type='submit'>

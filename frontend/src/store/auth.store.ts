@@ -19,7 +19,7 @@ const token = localStorage.getItem('token') && null
 
 export const UseAuthStore = create<authStoreState>(set => ({
   authData: {
-    ...userData,
+    userData,
     token
   },
   statusCode: null,

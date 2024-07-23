@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 'use client'
 
 // React Imports
@@ -70,6 +71,12 @@ const LoginV2 = ({ mode }: { mode: SystemMode }) => {
   const { login } = UseAuthStore()
 
   useEffect(() => {
+    // ;(async () => {
+    //   const res = await fetch('http://192.168.60.148:3000/unite')
+
+    //   console.log('test the api :', res)
+    // })()
+
     console.log('has changed :', authData)
 
     if (authData?.token) {

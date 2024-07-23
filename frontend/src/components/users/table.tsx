@@ -56,6 +56,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
+
   // const [filteredData, setFilteredData] = useState()
   const [globalFilter, setGlobalFilter] = useState('')
 
