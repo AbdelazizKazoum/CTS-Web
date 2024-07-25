@@ -23,7 +23,14 @@ export class DirectionService {
     }
   }
 
-  findAll() {
+  async findAll() {
+    try {
+      const directions = await this.directionRepository.find();
+
+      return directions;
+    } catch (error) {
+      return new InternalServerErrorException(error.message);
+    }
     return `This action returns all direction`;
   }
 

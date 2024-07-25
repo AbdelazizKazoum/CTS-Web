@@ -23,11 +23,13 @@ export class UtilisateurService {
 
   async createUser(createUserDto: CreateUserDto) {
     try {
+      console.log(createUserDto);
       const check = await this.utilisateurRepository.findBy({
         cin: createUserDto.cin,
       });
 
-      if (check) {
+      if (check.length > 0) {
+        console.log('found : ', check);
         throw new ConflictException('User already exists');
       }
       const newUser = await this.utilisateurRepository.create(createUserDto);

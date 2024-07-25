@@ -4,12 +4,14 @@ import { create } from 'zustand'
 import api from '@/lib/api'
 
 import type { UtilisateurType } from '@/types/userTypes'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 export interface UtilisateurState {
   users: UtilisateurType[] | null
 
   fetchUsers: () => Promise<UtilisateurType[]>
-  createUser: (user: UtilisateurType) => Promise<UtilisateurType>
+  createUser: (user: UtilisateurType) => Promise<UtilisateurType> | Promise<Error>
 }
 
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
@@ -35,9 +37,20 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
     try {
       const { data } = await api.post('utilisateur', user)
 
+      console.log('user created :', data)
+
+      if (data.status !== 400) {
+        toast.success('User created successfully')
+      } else {
+        toast.error(data.message)
+      }
+
       return data
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
+      toast.error(error?.message)
+
+      return null
     }
   }
 }))

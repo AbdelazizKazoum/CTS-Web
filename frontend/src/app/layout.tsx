@@ -10,6 +10,9 @@ import '@/app/globals.css'
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
 
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 export const metadata = {
   title: 'Vuexy - MUI Next.js Admin Dashboard Template',
   description:
@@ -22,7 +25,10 @@ const RootLayout = ({ children }: ChildrenType) => {
 
   return (
     <html id='__next' lang='en' dir={direction}>
-      <body className='flex is-full min-bs-full flex-auto flex-col'>{children}</body>
+      <body className='flex is-full min-bs-full flex-auto flex-col'>
+        <ToastContainer />
+        {children}
+      </body>
     </html>
   )
 }

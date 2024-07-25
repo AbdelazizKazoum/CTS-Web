@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 // React Imports
 import { useEffect, useState } from 'react'
 
@@ -19,6 +20,7 @@ import { useForm, Controller } from 'react-hook-form'
 import type { UtilisateurType } from '@/types/userTypes'
 import { UseUtilisateurStore } from '@/store/utilisateur.store'
 import { useDirectionStore } from '@/store/direction.store'
+import type { DirectionType } from '@/types/directionType'
 
 type Props = {
   open: boolean
@@ -31,21 +33,26 @@ type FormValidateType = {
   nom: string
   prenom: string
   matricule: string
+  cin: string
   direction: string | null | number
-  profile: string | null | number
+  profile: null | number
 }
 
 type FormNonValidateType = {
-  company: string
-  country: string
-  contact: string
+  nom: string
+  prenom: string
+  cin: string
+  matricule: string
+  direction: number | null
 }
 
 // Vars
 const initialData = {
-  company: '',
-  country: '',
-  contact: ''
+  nom: '',
+  prenom: '',
+  cin: '',
+  matricule: '',
+  direction: 0
 }
 
 const AddUserDrawer = (props: Props) => {
@@ -54,11 +61,10 @@ const AddUserDrawer = (props: Props) => {
 
   //store
   const { createUser } = UseUtilisateurStore()
-  const { fetchDirections } = useDirectionStore()
+  const { fetchDirections, directions } = useDirectionStore()
 
   // States
   const [formData, setFormData] = useState<FormNonValidateType>(initialData)
-  const [loaded, setLoaded] = useState(false)
 
   // Hooks
   const {
@@ -71,23 +77,30 @@ const AddUserDrawer = (props: Props) => {
       nom: '',
       prenom: '',
       matricule: '',
-      direction: null,
-      profile: null
+      cin: '',
+      direction: 0
     }
   })
 
-  const onSubmit = (data: FormValidateType) => {
+  const onSubmit = async (data: FormValidateType) => {
     const newUser: UtilisateurType = {
       nom: data.nom,
       prenom: data.prenom,
       matricule: data.matricule,
+      cin: data.cin,
       direction: data.direction
     }
 
     setData([...(userData ?? []), newUser])
-    handleClose()
-    setFormData(initialData)
-    resetForm({ nom: '', prenom: '', matricule: '', direction: '', profile: '' })
+
+    const res = await createUser(newUser)
+
+    console.log('get result from  api when success :', res)
+
+    if (res.status !== 500) {
+      handleClose()
+      resetForm({ nom: '', prenom: '', matricule: '', direction: '', cin: '' })
+    }
   }
 
   const handleReset = () => {
@@ -96,6 +109,7 @@ const AddUserDrawer = (props: Props) => {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line padding-line-between-statements
     ;(async () => {
       fetchDirections()
     })()
@@ -148,6 +162,20 @@ const AddUserDrawer = (props: Props) => {
             )}
           />
           <Controller
+            name='cin'
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <CustomTextField
+                {...field}
+                fullWidth
+                label='Cnie'
+                placeholder=''
+                {...(errors.prenom && { error: true, helperText: 'This field is required.' })}
+              />
+            )}
+          />
+          <Controller
             name='matricule'
             control={control}
             rules={{ required: true }}
@@ -157,7 +185,7 @@ const AddUserDrawer = (props: Props) => {
                 fullWidth
                 type='text'
                 label='Matricule'
-                placeholder='johndoe@gmail.com'
+                placeholder=''
                 {...(errors.matricule && { error: true, helperText: 'This field is required.' })}
               />
             )}
@@ -175,32 +203,9 @@ const AddUserDrawer = (props: Props) => {
                 {...field}
                 {...(errors.direction && { error: true, helperText: 'This field is required.' })}
               >
-                <MenuItem value='basic'>Basic</MenuItem>
-                <MenuItem value='company'>Company</MenuItem>
-                <MenuItem value='enterprise'>Enterprise</MenuItem>
-                <MenuItem value='team'>Team</MenuItem>
-              </CustomTextField>
-            )}
-          />
-          <Controller
-            name='profile'
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                select
-                fullWidth
-                id='select-plan'
-                label='Select Plan'
-                {...field}
-                inputProps={{ placeholder: 'Select Plan' }}
-                {...(errors.profile && { error: true, helperText: 'This field is required.' })}
-              >
-                <MenuItem value='admin'>Admin</MenuItem>
-                <MenuItem value='author'>Author</MenuItem>
-                <MenuItem value='editor'>Editor</MenuItem>
-                <MenuItem value='maintainer'>Maintainer</MenuItem>
-                <MenuItem value='subscriber'>Subscriber</MenuItem>
+                {directions?.map(function (item: DirectionType) {
+                  return <MenuItem value={item.id}>{item.nom_direction}</MenuItem>
+                })}
               </CustomTextField>
             )}
           />

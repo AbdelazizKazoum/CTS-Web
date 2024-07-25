@@ -1,16 +1,14 @@
+export interface UtilisateurType {
+  id: number
 
+  nom: string
 
-export  interface UtilisateurType {
-  id: number;
+  prenom: string
 
-  nom: string;
+  matricule: string
+  cni: string
 
-  prenom: string;
+  compte: number
 
-  matricule: string;
-
-  compte: number;
-
-  direction: number;
-
+  direction: number
 }
