@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import type { AuthType } from '@/types/authTypes'
 
 import api from '@/lib/api'
+import { toast } from 'react-toastify'
 
 interface authStoreState {
   authData: AuthType | null
@@ -14,14 +15,8 @@ interface authStoreState {
   logout: () => void
 }
 
-const userData = localStorage.getItem('userData') && null
-const token = localStorage.getItem('token') && null
-
 export const UseAuthStore = create<authStoreState>(set => ({
-  authData: {
-    userData,
-    token
-  },
+  authData: null,
   statusCode: null,
   message: null,
 
@@ -43,16 +38,20 @@ export const UseAuthStore = create<authStoreState>(set => ({
 
         console.log('hello world')
       } else {
-        alert('auth failed !')
+        console.log(authData)
       }
 
       return authData
     } catch (error: any) {
-      console.log(error.message)
+      toast.error(error.response?.data?.message || error.message)
+      console.log(error)
 
       return null
     }
   },
 
-  logout: async () => {}
+  logout: async () => {
+    // localStorage.removeItem('token')                                                                                            //////////////////////////////////////////////////////////////
+    localStorage.removeItem('userData')
+  }
 }))

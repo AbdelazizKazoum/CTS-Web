@@ -1,6 +1,7 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-key */
 // React Imports
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -9,6 +10,7 @@ import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
@@ -25,8 +27,9 @@ import type { DirectionType } from '@/types/directionType'
 type Props = {
   open: boolean
   handleClose: () => void
-  userData?: UtilisateurType[]
+  userData?: UtilisateurType
   setData: (data: UtilisateurType[]) => void
+  formMode: string
 }
 
 type FormValidateType = {
@@ -34,37 +37,20 @@ type FormValidateType = {
   prenom: string
   matricule: string
   cin: string
-  direction: string | null | number
+  direction: DirectionType | number | null
   profile: null | number
-}
-
-type FormNonValidateType = {
-  nom: string
-  prenom: string
-  cin: string
-  matricule: string
-  direction: number | null
-}
-
-// Vars
-const initialData = {
-  nom: '',
-  prenom: '',
-  cin: '',
-  matricule: '',
-  direction: 0
 }
 
 const AddUserDrawer = (props: Props) => {
   // Props
-  const { open, handleClose, userData, setData } = props
+  const { open, handleClose, userData, formMode } = props
 
   //store
-  const { createUser } = UseUtilisateurStore()
-  const { fetchDirections, directions } = useDirectionStore()
+  const { createUser, updateUser } = UseUtilisateurStore()
+  const { fetchDirections, directions, loading } = useDirectionStore()
 
   // States
-  const [formData, setFormData] = useState<FormNonValidateType>(initialData)
+  const [user, setUser] = useState<UtilisateurType>()
 
   // Hooks
   const {
@@ -72,15 +58,7 @@ const AddUserDrawer = (props: Props) => {
     reset: resetForm,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormValidateType>({
-    defaultValues: {
-      nom: '',
-      prenom: '',
-      matricule: '',
-      cin: '',
-      direction: 0
-    }
-  })
+  } = useForm<FormValidateType>({})
 
   const onSubmit = async (data: FormValidateType) => {
     const newUser: UtilisateurType = {
@@ -88,32 +66,45 @@ const AddUserDrawer = (props: Props) => {
       prenom: data.prenom,
       matricule: data.matricule,
       cin: data.cin,
-      direction: data.direction
+      direction: directions?.find((item: DirectionType) => item.id === data.direction) || null
     }
 
-    setData([...(userData ?? []), newUser])
+    // setData([...(userData ?? []), newUser])
 
-    const res = await createUser(newUser)
+    let res: any
 
-    console.log('get result from  api when success :', res)
+    if (formMode === 'new') {
+      res = await createUser(newUser)
+    } else if (formMode === 'edit') {
+      res = await updateUser({ ...newUser, id: user?.id })
+    } else {
+      res = null
+    }
 
     if (res.status !== 500) {
       handleClose()
-      resetForm({ nom: '', prenom: '', matricule: '', direction: '', cin: '' })
+      resetForm({ nom: '', prenom: '', matricule: '', direction: null, cin: '' })
     }
   }
 
   const handleReset = () => {
     handleClose()
-    setFormData(initialData)
   }
+
+  useEffect(() => {
+    setUser(props.userData)
+    console.log('test redring : ')
+  }, [props.userData, setUser])
 
   useEffect(() => {
     // eslint-disable-next-line padding-line-between-statements
     ;(async () => {
       fetchDirections()
     })()
-  }, [])
+  }, [fetchDirections])
+
+  if (loading) return <CircularProgress />
+  console.log('hello world :', userData)
 
   return (
     <Drawer
@@ -136,6 +127,7 @@ const AddUserDrawer = (props: Props) => {
           <Controller
             name='nom'
             control={control}
+            defaultValue={user?.nom}
             rules={{ required: true }}
             render={({ field }) => (
               <CustomTextField
@@ -150,6 +142,7 @@ const AddUserDrawer = (props: Props) => {
           <Controller
             name='prenom'
             control={control}
+            defaultValue={user?.prenom}
             rules={{ required: true }}
             render={({ field }) => (
               <CustomTextField
@@ -164,6 +157,7 @@ const AddUserDrawer = (props: Props) => {
           <Controller
             name='cin'
             control={control}
+            defaultValue={user?.cin}
             rules={{ required: true }}
             render={({ field }) => (
               <CustomTextField
@@ -178,6 +172,7 @@ const AddUserDrawer = (props: Props) => {
           <Controller
             name='matricule'
             control={control}
+            defaultValue={user?.matricule}
             rules={{ required: true }}
             render={({ field }) => (
               <CustomTextField
@@ -194,6 +189,7 @@ const AddUserDrawer = (props: Props) => {
             name='direction'
             control={control}
             rules={{ required: true }}
+            defaultValue={user?.direction?.id || 1}
             render={({ field }) => (
               <CustomTextField
                 select
@@ -204,16 +200,31 @@ const AddUserDrawer = (props: Props) => {
                 {...(errors.direction && { error: true, helperText: 'This field is required.' })}
               >
                 {directions?.map(function (item: DirectionType) {
-                  return <MenuItem value={item.id}>{item.nom_direction}</MenuItem>
+                  return (
+                    <MenuItem key={item.id} value={item.id || ''}>
+                      {item.nom_direction || ''}
+                    </MenuItem>
+                  )
                 })}
               </CustomTextField>
             )}
           />
 
           <div className='flex items-center gap-4'>
-            <Button variant='contained' type='submit'>
-              Submit
-            </Button>
+            {formMode === 'new' ? (
+              <Button variant='contained' type='submit'>
+                Enregistrer
+              </Button>
+            ) : formMode === 'edit' ? (
+              <Button variant='contained' type='submit'>
+                Modifier
+              </Button>
+            ) : formMode === 'view' ? (
+              <></>
+            ) : (
+              ''
+            )}
+
             <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
               Cancel
             </Button>

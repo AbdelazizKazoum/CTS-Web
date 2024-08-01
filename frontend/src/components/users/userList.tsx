@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { Grid } from '@mui/material'
+import { CircularProgress, Grid } from '@mui/material'
 
 import type { UtilisateurType } from '@/types/userTypes'
 import { Table } from './table'
@@ -25,8 +25,14 @@ const UserList = ({ data }: { data: UtilisateurType[] }) => {
     <div>
       <Grid container spacing={6}>
         <Grid item xs={12}></Grid>
-        <Grid item xs={12}>
-          {users?.length > 0 ? <Table tableData={users} /> : 'loading ...'}
+        <Grid item xs={12} className=''>
+          {users?.length > 0 ? (
+            <Table tableData={users} />
+          ) : (
+            <div className=' h-full w-full flex justify-center items-center  '>
+              <CircularProgress className=' mt-32 ' />
+            </div>
+          )}
         </Grid>
       </Grid>
     </div>

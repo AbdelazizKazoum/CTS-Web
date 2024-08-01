@@ -61,6 +61,8 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
   const [globalFilter, setGlobalFilter] = useState('')
 
   const [data, setData] = useState(...[tableData])
+  const [user, setUser] = useState<UtilisateurType>()
+  const [formMode, setFormMode] = useState('new')
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -199,12 +201,21 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
                 {
                   text: 'Download',
                   icon: 'tabler-download',
-                  menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
+                  menuItemProps: {
+                    className: 'flex items-center gap-2 text-textSecondary'
+                  }
                 },
                 {
                   text: 'Edit',
                   icon: 'tabler-edit',
-                  menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
+                  menuItemProps: {
+                    className: 'flex items-center gap-2 text-textSecondary',
+                    onClick: () => {
+                      setUser(row.original)
+                      setFormMode('edit')
+                      setAddUserOpen(!addUserOpen)
+                    }
+                  }
                 }
               ]}
             />
@@ -246,8 +257,6 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  console.log(tableData)
-
   return (
     <div>
       <Card>
@@ -282,7 +291,10 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
             <Button
               variant='contained'
               startIcon={<i className='tabler-plus' />}
-              onClick={() => setAddUserOpen(!addUserOpen)}
+              onClick={() => {
+                setFormMode('new')
+                setAddUserOpen(!addUserOpen)
+              }}
               className='is-full sm:is-auto'
             >
               Add New User
@@ -357,8 +369,9 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
       <AddUserDrawer
         open={addUserOpen}
         handleClose={() => setAddUserOpen(!addUserOpen)}
-        userData={data}
+        userData={user}
         setData={setData}
+        formMode={formMode}
       />
     </div>
   )

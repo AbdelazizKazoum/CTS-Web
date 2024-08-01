@@ -1,14 +1,14 @@
+import type { DirectionType } from './directionType'
+
 export interface UtilisateurType {
-  id: number
+  id?: number
 
   nom: string
 
   prenom: string
 
   matricule: string
-  cni: string
+  cin: string
 
-  compte: number
-
-  direction: number
+  direction: DirectionType | null
 }

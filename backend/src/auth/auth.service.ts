@@ -21,6 +21,8 @@ export class AuthService {
 
     const compte = await this.compteService.findByUser(user);
 
+    if (!compte) throw new UnauthorizedException("User doesn't have account! ");
+
     const payload = {
       ...user,
       direction: user.direction.nom_direction,
