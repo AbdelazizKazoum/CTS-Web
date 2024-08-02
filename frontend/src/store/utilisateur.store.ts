@@ -79,7 +79,7 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       set({ loading: false })
       toast.error(error?.message || error.response.message || 'Unexpected error !')
 
-      return null
+      return error
     }
   }
 }))

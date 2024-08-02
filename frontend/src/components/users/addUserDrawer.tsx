@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-key */
 // React Imports
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -24,14 +24,6 @@ import { UseUtilisateurStore } from '@/store/utilisateur.store'
 import { useDirectionStore } from '@/store/direction.store'
 import type { DirectionType } from '@/types/directionType'
 
-type Props = {
-  open: boolean
-  handleClose: () => void
-  userData?: UtilisateurType
-  setData: (data: UtilisateurType[]) => void
-  formMode: string
-}
-
 type FormValidateType = {
   nom: string
   prenom: string
@@ -41,22 +33,31 @@ type FormValidateType = {
   profile: null | number
 }
 
-const AddUserDrawer = (props: Props) => {
-  // Props
-  const { open, handleClose, userData, formMode } = props
-
+const AddUserDrawer = ({
+  open,
+  handleClose,
+  userData,
+  setData,
+  formMode
+}: {
+  open: boolean
+  handleClose: () => void
+  userData?: UtilisateurType
+  setData: any
+  formMode: string
+}) => {
   //store
   const { createUser, updateUser } = UseUtilisateurStore()
   const { fetchDirections, directions, loading } = useDirectionStore()
 
   // States
-  const [user, setUser] = useState<UtilisateurType>()
 
   // Hooks
   const {
     control,
     reset: resetForm,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<FormValidateType>({})
 
@@ -76,14 +77,25 @@ const AddUserDrawer = (props: Props) => {
     if (formMode === 'new') {
       res = await createUser(newUser)
     } else if (formMode === 'edit') {
-      res = await updateUser({ ...newUser, id: user?.id })
+      res = await updateUser({ ...newUser, id: userData?.id })
     } else {
       res = null
     }
 
-    if (res.status !== 500) {
+    console.log('test user to update :', newUser)
+
+    if (res.status || res.status !== 500) {
+      setData((prev: UtilisateurType[]) =>
+        prev.map((item: UtilisateurType) => {
+          if (item.id === userData?.id) {
+            return { ...item, ...newUser }
+          } else {
+            return item
+          }
+        })
+      )
       handleClose()
-      resetForm({ nom: '', prenom: '', matricule: '', direction: null, cin: '' })
+      resetForm()
     }
   }
 
@@ -91,10 +103,16 @@ const AddUserDrawer = (props: Props) => {
     handleClose()
   }
 
-  useEffect(() => {
-    setUser(props.userData)
-    console.log('test redring : ')
-  }, [props.userData, setUser])
+  useEffect(
+    function () {
+      setValue('nom', userData?.nom || '')
+      setValue('prenom', userData?.prenom || '  ')
+      setValue('cin', userData?.cin || '')
+      setValue('matricule', userData?.matricule || '')
+      setValue('direction', userData?.direction?.id || 1)
+    },
+    [setValue, userData]
+  )
 
   useEffect(() => {
     // eslint-disable-next-line padding-line-between-statements
@@ -104,134 +122,136 @@ const AddUserDrawer = (props: Props) => {
   }, [fetchDirections])
 
   if (loading) return <CircularProgress />
-  console.log('hello world :', userData)
+  console.log('im rendring :', userData)
 
   return (
-    <Drawer
-      open={open}
-      anchor='right'
-      variant='temporary'
-      onClose={handleReset}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
-    >
-      <div className='flex items-center justify-between plb-5 pli-6'>
-        <Typography variant='h5'>Add New User</Typography>
-        <IconButton size='small' onClick={handleReset}>
-          <i className='tabler-x text-2xl text-textPrimary' />
-        </IconButton>
-      </div>
-      <Divider />
-      <div>
-        <form onSubmit={handleSubmit(data => onSubmit(data))} className='flex flex-col gap-6 p-6'>
-          <Controller
-            name='nom'
-            control={control}
-            defaultValue={user?.nom}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                fullWidth
-                label='Nom'
-                placeholder='John Doe'
-                {...(errors.nom && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='prenom'
-            control={control}
-            defaultValue={user?.prenom}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                fullWidth
-                label='Prénom'
-                placeholder='johndoe'
-                {...(errors.prenom && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='cin'
-            control={control}
-            defaultValue={user?.cin}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                fullWidth
-                label='Cnie'
-                placeholder=''
-                {...(errors.prenom && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='matricule'
-            control={control}
-            defaultValue={user?.matricule}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                fullWidth
-                type='text'
-                label='Matricule'
-                placeholder=''
-                {...(errors.matricule && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='direction'
-            control={control}
-            rules={{ required: true }}
-            defaultValue={user?.direction?.id || 1}
-            render={({ field }) => (
-              <CustomTextField
-                select
-                fullWidth
-                id='select-role'
-                label='Select Direction'
-                {...field}
-                {...(errors.direction && { error: true, helperText: 'This field is required.' })}
-              >
-                {directions?.map(function (item: DirectionType) {
-                  return (
-                    <MenuItem key={item.id} value={item.id || ''}>
-                      {item.nom_direction || ''}
-                    </MenuItem>
-                  )
-                })}
-              </CustomTextField>
-            )}
-          />
+    <div>
+      <Drawer
+        open={open}
+        anchor='right'
+        variant='temporary'
+        onClose={handleReset}
+        ModalProps={{ keepMounted: true }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+      >
+        <div className='flex items-center justify-between plb-5 pli-6'>
+          <Typography variant='h5'>Add New User</Typography>
+          <IconButton size='small' onClick={handleReset}>
+            <i className='tabler-x text-2xl text-textPrimary' />
+          </IconButton>
+        </div>
+        <Divider />
+        <div>
+          <form onSubmit={handleSubmit(data => onSubmit(data))} className='flex flex-col gap-6 p-6'>
+            <Controller
+              name='nom'
+              control={control}
+              defaultValue={userData?.nom}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Nom'
+                  placeholder='John Doe'
+                  {...(errors.nom && { error: true, helperText: 'This field is required.' })}
+                />
+              )}
+            />
+            <Controller
+              name='prenom'
+              control={control}
+              defaultValue={userData?.prenom}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Prénom'
+                  placeholder='johndoe'
+                  {...(errors.prenom && { error: true, helperText: 'This field is required.' })}
+                />
+              )}
+            />
+            <Controller
+              name='cin'
+              control={control}
+              defaultValue={userData?.cin}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  label='Cnie'
+                  placeholder=''
+                  {...(errors.prenom && { error: true, helperText: 'This field is required.' })}
+                />
+              )}
+            />
+            <Controller
+              name='matricule'
+              control={control}
+              defaultValue={userData?.matricule}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  fullWidth
+                  type='text'
+                  label='Matricule'
+                  placeholder=''
+                  {...(errors.matricule && { error: true, helperText: 'This field is required.' })}
+                />
+              )}
+            />
+            <Controller
+              name='direction'
+              control={control}
+              rules={{ required: true }}
+              defaultValue={userData?.direction?.id || 1}
+              render={({ field }) => (
+                <CustomTextField
+                  select
+                  fullWidth
+                  id='select-role'
+                  label='Select Direction'
+                  {...field}
+                  {...(errors.direction && { error: true, helperText: 'This field is required.' })}
+                >
+                  {directions?.map(function (item: DirectionType) {
+                    return (
+                      <MenuItem key={item.id} value={item.id || ''}>
+                        {item.nom_direction || ''}
+                      </MenuItem>
+                    )
+                  })}
+                </CustomTextField>
+              )}
+            />
 
-          <div className='flex items-center gap-4'>
-            {formMode === 'new' ? (
-              <Button variant='contained' type='submit'>
-                Enregistrer
-              </Button>
-            ) : formMode === 'edit' ? (
-              <Button variant='contained' type='submit'>
-                Modifier
-              </Button>
-            ) : formMode === 'view' ? (
-              <></>
-            ) : (
-              ''
-            )}
+            <div className='flex items-center gap-4'>
+              {formMode === 'new' ? (
+                <Button variant='contained' type='submit'>
+                  Enregistrer
+                </Button>
+              ) : formMode === 'edit' ? (
+                <Button variant='contained' type='submit'>
+                  Modifier
+                </Button>
+              ) : formMode === 'view' ? (
+                <></>
+              ) : (
+                ''
+              )}
 
-            <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </div>
-    </Drawer>
+              <Button variant='tonal' color='error' type='reset' onClick={() => handleReset()}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Drawer>
+    </div>
   )
 }
 

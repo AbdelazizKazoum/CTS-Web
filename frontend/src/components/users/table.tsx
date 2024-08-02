@@ -60,8 +60,8 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
   // const [filteredData, setFilteredData] = useState()
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const [data, setData] = useState(...[tableData])
-  const [user, setUser] = useState<UtilisateurType>()
+  const [data, setData] = useState<UtilisateurType[] | null>(...[tableData])
+  const [user, setUser] = useState<UtilisateurType | null>()
   const [formMode, setFormMode] = useState('new')
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -190,9 +190,14 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href='/' className='flex'>
-                <i className='tabler-eye text-textSecondary' />
-              </Link>
+              <i
+                onClick={() => {
+                  setFormMode('view')
+                  setUser(row.original)
+                  setAddUserOpen(!addUserOpen)
+                }}
+                className='tabler-eye text-textSecondary'
+              />
             </IconButton>
             <OptionMenu
               iconButtonProps={{ size: 'medium' }}
@@ -293,6 +298,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               startIcon={<i className='tabler-plus' />}
               onClick={() => {
                 setFormMode('new')
+                setUser(null)
                 setAddUserOpen(!addUserOpen)
               }}
               className='is-full sm:is-auto'
