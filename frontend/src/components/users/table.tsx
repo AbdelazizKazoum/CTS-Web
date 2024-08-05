@@ -190,14 +190,16 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
-              <i
-                onClick={() => {
-                  setFormMode('view')
-                  setUser(row.original)
-                  setAddUserOpen(!addUserOpen)
-                }}
-                className='tabler-eye text-textSecondary'
-              />
+              <Link href={`/utilisateurs/view/1`}>
+                <i
+                  onClick={() => {
+                    // setFormMode('view')
+                    // setUser(row.original)
+                    // setAddUserOpen(!addUserOpen)
+                  }}
+                  className='tabler-eye text-textSecondary'
+                />
+              </Link>
             </IconButton>
             <OptionMenu
               iconButtonProps={{ size: 'medium' }}

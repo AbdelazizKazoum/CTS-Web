@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+'use client'
+
 import type { AxiosRequestHeaders } from 'axios'
 import axios from 'axios'
 
@@ -24,5 +27,4 @@ api.interceptors.request.use(
   error => Promise.reject(error)
 )
 
-console.log(BACKEND_API_URL)
 export default api

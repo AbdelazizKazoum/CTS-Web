@@ -32,9 +32,20 @@ export class UtilisateurController {
     return await this.utilisateurService.findAll();
   }
 
-  @Get()
+  @Get('/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  @Roles(Role.utilisateur)
+  async getUser(@Param('id') id: number): Promise<Utilisateur> {
+    return await this.utilisateurService.findOne(id);
+  }
+
+  @Get('/cin/:cin')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  @Roles(Role.utilisateur)
   async getByCin(@Param('cin') cin: string): Promise<Utilisateur> {
-    return await this.utilisateurService.findOne(cin);
+    return await this.utilisateurService.findOneByCin(cin);
   }
 
   @Post()
