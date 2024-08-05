@@ -1,10 +1,13 @@
 /* eslint-disable import/no-unresolved */
 import { create } from 'zustand'
 
+import { toast } from 'react-toastify'
+
 import type { AuthType } from '@/types/authTypes'
 
 import api from '@/lib/api'
-import { toast } from 'react-toastify'
+
+import { handleSession } from '@/lib/handleSession'
 
 interface authStoreState {
   authData: AuthType | null
@@ -35,6 +38,7 @@ export const UseAuthStore = create<authStoreState>(set => ({
 
         localStorage.setItem('token', authData.token)
         localStorage.setItem('userData', authData.payload)
+        handleSession(authData.token)
 
         console.log('hello world')
       } else {

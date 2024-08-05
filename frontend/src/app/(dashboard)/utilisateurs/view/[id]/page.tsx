@@ -1,6 +1,8 @@
 /* eslint-disable import/no-unresolved */
+'use client'
+
 // React Imports
-import type { ReactElement } from 'react'
+import { useEffect, type ReactElement } from 'react'
 
 // Next Imports
 import dynamic from 'next/dynamic'
@@ -12,6 +14,7 @@ import UserLeftOverview from '@/components/users/view/user-left/UserLeft'
 
 import UserRight from '@/components/users/view/user-right/UserRight'
 import api from '@/lib/api'
+import { UseUtilisateurStore } from '@/store/utilisateur.store'
 
 const SecurityTab = dynamic(() => import('@/components/users/view/user-right/profile-security'))
 
@@ -20,17 +23,19 @@ const tabContentList = (): { [key: string]: ReactElement } => ({
   security: <SecurityTab />
 })
 
-const getUserData = async (id: number) => {
-  const res = await api.get(`/utilisateur/${id}`)
+const UserViewTab = ({ params }: { params: { id: number } }) => {
 
-  if (res.error) {
-    throw new Error('error happend')
-  }
-}
+  const { getUserById } = UseUtilisateurStore()
 
-const UserViewTab = async ({ params }: { params: { id: number } }) => {
-  // Vars
-  const data = await getUserData(params.id)
+
+  useEffect(()=>{
+
+    ( async()=>{
+      const user =
+
+    } )()
+
+  })
 
   return (
     <Grid container spacing={6}>

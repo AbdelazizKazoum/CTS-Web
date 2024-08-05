@@ -15,10 +15,12 @@ export interface UtilisateurState {
   fetchUsers: () => Promise<UtilisateurType[]>
   createUser: (user: UtilisateurType) => Promise<UtilisateurType> | Promise<any>
   updateUser: (user: UtilisateurType) => Promise<any>
+  getUserById: (id: number) => Promise<UtilisateurType>
 }
 
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
   users: [],
+  selectedUser: {},
   loading: false,
   error: '',
 
@@ -35,6 +37,21 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       console.log('test data from the api :', data)
 
       return users
+    } catch (error) {
+      console.log(error)
+      set({ loading: false, users: [] })
+    }
+  },
+
+  getUserById: async (id: number) => {
+    try {
+      set({ loading: true })
+      const { data } = await api.get(`/utilisateur/${id}`)
+
+      set
+      set({ loading: false })
+
+      return data
     } catch (error) {
       console.log(error)
       set({ loading: false, users: [] })
