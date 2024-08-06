@@ -6,6 +6,7 @@ import { Profile } from 'src/entities/profile.entity';
 import { Compte } from 'src/entities/compte.entity';
 import { UtilisateurService } from 'src/utilisateur/utilisateur.service';
 import { UtilisateurController } from 'src/utilisateur/utilisateur.controller';
+import { Utilisateur } from 'src/entities/utilisateur.entity';
 
 @Module({
   // imports: [TypeOrmModule.forFeature([Profile])],
@@ -13,8 +14,8 @@ import { UtilisateurController } from 'src/utilisateur/utilisateur.controller';
   // controllers: [CompteController],
   // exports: [TypeOrmModule],
 
-  imports: [TypeOrmModule.forFeature([Compte])],
-  providers: [CompteService],
+  imports: [TypeOrmModule.forFeature([Compte, Utilisateur])],
+  providers: [CompteService, UtilisateurService],
   controllers: [CompteController],
   exports: [TypeOrmModule],
 })

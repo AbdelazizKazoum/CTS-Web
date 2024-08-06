@@ -190,7 +190,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={`/utilisateurs/view/1`}>
+              <Link href={`/utilisateurs/view/${row.original.id}`}>
                 <i
                   onClick={() => {
                     // setFormMode('view')

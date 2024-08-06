@@ -15,6 +15,7 @@ import Divider from '@mui/material/Divider'
 
 // Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
+import { UtilisateurType } from '@/types/userTypes'
 
 // Vars
 const userData = {
@@ -31,7 +32,7 @@ const userData = {
   useAsBillingAddress: true
 }
 
-const UserDetails = () => {
+const UserDetails = ({ userData }: { userData: UtilisateurType }) => {
   // Vars
   // const buttonProps = (children: string, color: ThemeColor, variant: ButtonProps['variant']): ButtonProps => ({
   //   children,
@@ -47,18 +48,18 @@ const UserDetails = () => {
             <div className='flex items-center justify-center flex-col gap-4'>
               <div className='flex flex-col items-center gap-4'>
                 <CustomAvatar alt='user-profile' src='/images/avatars/1.png' variant='rounded' size={120} />
-                <Typography variant='h5'>{`${userData.firstName} ${userData.lastName}`}</Typography>
+                <Typography variant='h5'>{`${userData.nom} ${userData.prenom}`}</Typography>
               </div>
               <Chip label='Author' color='secondary' size='small' variant='tonal' />
             </div>
-            <div className='flex items-center justify-around flex-wrap gap-4'>
+            <div className='flex items-center flex-wrap gap-4'>
               <div className='flex items-center gap-4'>
                 <CustomAvatar variant='rounded' color='primary' skin='light'>
                   <i className='tabler-checkbox' />
                 </CustomAvatar>
                 <div>
                   <Typography variant='h5'>1.23k</Typography>
-                  <Typography>Task Done</Typography>
+                  <Typography>Les Courriers Modifiers</Typography>
                 </div>
               </div>
               <div className='flex items-center gap-4'>
@@ -67,7 +68,7 @@ const UserDetails = () => {
                 </CustomAvatar>
                 <div>
                   <Typography variant='h5'>568</Typography>
-                  <Typography>Project Done</Typography>
+                  <Typography>Les Courriers Crées</Typography>
                 </div>
               </div>
             </div>
@@ -78,51 +79,33 @@ const UserDetails = () => {
             <div className='flex flex-col gap-2'>
               <div className='flex items-center flex-wrap gap-x-1.5'>
                 <Typography className='font-medium' color='text.primary'>
-                  Username:
+                  Nom:
                 </Typography>
-                <Typography>{userData.userName}</Typography>
+                <Typography>{userData.nom}</Typography>
               </div>
               <div className='flex items-center flex-wrap gap-x-1.5'>
                 <Typography className='font-medium' color='text.primary'>
-                  Billing Email:
+                  Prénom:
                 </Typography>
-                <Typography>{userData.billingEmail}</Typography>
+                <Typography>{userData.prenom}</Typography>
               </div>
               <div className='flex items-center flex-wrap gap-x-1.5'>
                 <Typography className='font-medium' color='text.primary'>
-                  Status
+                  Matricule
                 </Typography>
-                <Typography color='text.primary'>{userData.status}</Typography>
+                <Typography color='text.primary'>{userData.matricule}</Typography>
               </div>
               <div className='flex items-center flex-wrap gap-x-1.5'>
                 <Typography className='font-medium' color='text.primary'>
-                  Role:
+                  Cine:
                 </Typography>
-                <Typography color='text.primary'>{userData.role}</Typography>
+                <Typography color='text.primary'>{userData.cin}</Typography>
               </div>
               <div className='flex items-center flex-wrap gap-x-1.5'>
                 <Typography className='font-medium' color='text.primary'>
-                  Tax ID:
+                  Direction:
                 </Typography>
-                <Typography color='text.primary'>{userData.taxId}</Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Contact:
-                </Typography>
-                <Typography color='text.primary'>{userData.contact}</Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Language:
-                </Typography>
-                <Typography color='text.primary'>{userData.language}</Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Country:
-                </Typography>
-                <Typography color='text.primary'>{userData.country}</Typography>
+                <Typography color='text.primary'>{userData.direction?.nom_direction}</Typography>
               </div>
             </div>
           </div>

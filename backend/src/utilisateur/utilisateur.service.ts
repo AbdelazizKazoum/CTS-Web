@@ -78,7 +78,7 @@ export class UtilisateurService {
   async findOne(id: number): Promise<Utilisateur | null> {
     return await this.utilisateurRepository.findOne({
       where: { id },
-      relations: ['direction'],
+      relations: ['direction', 'compte', 'compte.profile'],
     });
   }
 

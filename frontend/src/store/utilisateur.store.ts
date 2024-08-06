@@ -9,6 +9,7 @@ import type { UtilisateurType } from '@/types/userTypes'
 
 export interface UtilisateurState {
   users: UtilisateurType[] | null
+  selectedUser: UtilisateurType | null
   loading: boolean
   error: string
 
@@ -20,7 +21,7 @@ export interface UtilisateurState {
 
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
   users: [],
-  selectedUser: {},
+  selectedUser: null,
   loading: false,
   error: '',
 
@@ -48,7 +49,7 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       set({ loading: true })
       const { data } = await api.get(`/utilisateur/${id}`)
 
-      set
+      set({ selectedUser: data })
       set({ loading: false })
 
       return data

@@ -14,6 +14,9 @@ export class CompteService {
   constructor(
     @InjectRepository(Compte)
     private compteRepository: Repository<Compte>,
+
+    @InjectRepository(Utilisateur)
+    private utilisateurRepository: Repository<Utilisateur>,
   ) {}
 
   async create(createCompteDto: CreateCompteDto) {
@@ -21,9 +24,6 @@ export class CompteService {
 
     try {
       const password = createCompteDto.passe;
-      console.log('test');
-      console.log(password);
-      console.log(createCompteDto);
 
       const hashPass = await bcrypt.hash(password, salt);
 
@@ -31,8 +31,17 @@ export class CompteService {
         ...createCompteDto,
         pass: hashPass,
       });
+      const compte = await this.compteRepository.save(newCompte);
 
-      return await this.compteRepository.save(newCompte);
+      const user = await this.utilisateurRepository.findOneBy({
+        id: createCompteDto.utilisateur.id,
+      });
+
+      user.compte = compte;
+
+      await this.utilisateurRepository.save(user);
+
+      return compte;
     } catch (error) {
       return new InternalServerErrorException(error.message);
     }

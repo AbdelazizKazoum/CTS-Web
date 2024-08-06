@@ -27,9 +27,9 @@ export class Utilisateur {
   @Column()
   matricule: string;
 
-  @OneToOne(() => Compte)
+  @OneToOne(() => Compte, (compte) => compte.utilisateur)
   @JoinColumn()
-  compte: Compte;
+  compte?: Compte;
 
   @ManyToOne(() => Direction, (direction) => direction.utilisateurs)
   @JoinColumn()

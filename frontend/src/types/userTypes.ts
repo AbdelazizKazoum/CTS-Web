@@ -11,4 +11,17 @@ export interface UtilisateurType {
   cin: string
 
   direction: DirectionType | null
+
+  compte?: CompteType | null
+}
+
+export interface CompteType {
+  id?: number
+  pseudo: string
+  profile: ProfileType
+}
+
+export interface ProfileType {
+  id?: 1
+  libeleFunction: string
 }

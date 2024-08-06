@@ -18,7 +18,7 @@ export class Compte {
   @Column()
   pseudo: string;
 
-  @OneToOne(() => Utilisateur)
+  @OneToOne(() => Utilisateur, (utilisateur) => utilisateur.compte)
   @JoinColumn()
   utilisateur: Utilisateur;
 
@@ -26,6 +26,6 @@ export class Compte {
   @JoinColumn()
   profile: Profile;
 
-  @Column()
+  @Column({ select: false })
   pass: string;
 }
