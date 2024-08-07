@@ -20,7 +20,7 @@ export class CompteService {
   ) {}
 
   async create(createCompteDto: CreateCompteDto) {
-    console.log('hello from the service !!!');
+    console.log('hello from the service !!!', createCompteDto);
 
     try {
       const password = createCompteDto.passe;
@@ -43,7 +43,7 @@ export class CompteService {
 
       return compte;
     } catch (error) {
-      return new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 

@@ -1,59 +1,93 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable import/no-unresolved */
 'use client'
 
 // React Imports
+import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
-import Switch from '@mui/material/Switch'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Typography from '@mui/material/Typography'
 
 import { MenuItem } from '@mui/material'
 
 import CustomTextField from '@core/components/mui/TextField'
 
+import { toast } from 'react-toastify'
+
 import DialogCloseButton from '../DialogCloseButton'
+import { useProfileStore } from '@/store/profile.store'
+import { UseUtilisateurStore } from '@/store/utilisateur.store'
+import type { CompteType } from '@/types/userTypes'
 
 // Component Imports
 
-type BillingCardData = {
+type CompteData = {
   profile?: string
-  password?: string
+  pass?: string
   confirmPassword: string
 }
 
-type BillingCardProps = {
+type CompteDataProps = {
   open: boolean
   setOpen: (open: boolean) => void
-  data?: BillingCardData
+  data?: CompteData
 }
 
-const initialCardData: BillingCardProps['data'] = {
+const initialCompteData: CompteDataProps['data'] = {
   profile: '',
-  password: '',
+  pass: '',
   confirmPassword: ''
 }
 
-const CreateCompte = ({ open, setOpen, data }: BillingCardProps) => {
+const CreateCompte = ({ open, setOpen, data }: CompteDataProps) => {
+  //store
+  const { profileRoles, fetchProfileRoles } = useProfileStore()
+  const { createCompte, selectedUser, getUserById } = UseUtilisateurStore()
+
   // States
-  const [cardData, setCardData] = useState(initialCardData)
+  const [compteData, setCompteData] = useState(initialCompteData)
 
   const handleClose = () => {
     setOpen(false)
-    setCardData(initialCardData)
+    setCompteData(initialCompteData)
   }
 
   useEffect(() => {
-    setCardData(data ?? initialCardData)
+    setCompteData(data ?? initialCompteData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
+
+  useEffect(() => {
+    if (!profileRoles) {
+      ;(async () => {
+        await fetchProfileRoles()
+      })()
+    }
+  }, [fetchProfileRoles, profileRoles])
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (compteData.pass === compteData.confirmPassword && selectedUser?.id) {
+      const compte = {
+        pseudo: '',
+        passe: compteData.pass,
+        profile: profileRoles?.find(item => item.id == compteData.profile),
+        utilisateur: selectedUser
+      } as CompteType
+      await createCompte(compte)
+      getUserById(selectedUser.id)
+      handleClose()
+    } else {
+      toast.error('le mot de passe ne correspond pas !')
+    }
+  }
 
   return (
     <Dialog open={open} onClose={handleClose} sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}>
@@ -61,58 +95,59 @@ const CreateCompte = ({ open, setOpen, data }: BillingCardProps) => {
         <i className='tabler-x' />
       </DialogCloseButton>
       <DialogTitle variant='h4' className='flex flex-col gap-2 text-center p-6 sm:pbs-16 sm:pbe-6 sm:pli-16'>
-        {data ? 'Edit Card' : 'Create Compte'}
+        {data ? 'Edit Compte' : 'Créer un compte'}
         <Typography component='span' className='flex flex-col text-center'>
-          {data ? 'Edit your saved card details' : 'Add card for future billing'}
+          {data ? 'Edit your Compte' : 'Add card for future billing'}
         </Typography>
       </DialogTitle>
-      <form onSubmit={e => e.preventDefault()}>
+      <form onSubmit={onSubmit}>
         <DialogContent className='overflow-visible pbs-0 p-6 sm:pli-16'>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <CustomTextField
                 select
                 fullWidth
-                label='Profile'
-                value={cardData?.profile}
-                onChange={e => setCardData({ ...cardData, profile: e.target.value as string })}
+                label='Rôle du profil'
+                placeholder='Sélectionner un rôle'
+                value={compteData?.profile}
+                onChange={e => setCompteData({ ...compteData, profile: e.target.value as string })}
               >
-                <MenuItem value='Administrateur'>Administrateur</MenuItem>
-                <MenuItem value='Secretariat'>Secretariat</MenuItem>
-                <MenuItem value='Utilisateur'>Utilisateur</MenuItem>{' '}
+                {profileRoles?.map((item, index) => (
+                  <MenuItem key={index} value={item.id}>
+                    {item.libeleFunction}
+                  </MenuItem>
+                ))}
               </CustomTextField>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
+                type='password'
                 name='password'
-                label='Name on Card'
+                label='Mot de passe'
                 autoComplete='off'
-                placeholder='John Doe'
-                value={cardData.password}
-                onChange={e => setCardData({ ...cardData, password: e.target.value })}
+                placeholder=''
+                value={compteData.pass}
+                onChange={e => setCompteData({ ...compteData, pass: e.target.value })}
               />
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid item xs={6} sm={6}>
               <CustomTextField
                 fullWidth
-                name='expiry'
+                type='password'
+                name='confirmPassword'
                 autoComplete='off'
-                label='Expiry'
-                placeholder='MM/YY'
-                value={cardData.confirmPassword}
-                onChange={e => setCardData({ ...cardData, confirmPassword: e.target.value })}
+                label='Confirmer le mot de passe'
+                placeholder=''
+                value={compteData.confirmPassword}
+                onChange={e => setCompteData({ ...compteData, confirmPassword: e.target.value })}
               />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel control={<Switch defaultChecked />} label='Save Card for future billing?' />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions className='justify-center pbs-0 p-6 sm:pbe-16 sm:pli-16'>
-          <Button variant='contained' type='submit' onClick={handleClose}>
-            {data ? 'Update' : 'Submit'}
+          <Button variant='contained' type='submit'>
+            {data ? 'Modifier' : 'Enrigestrer'}
           </Button>
           <Button variant='tonal' type='reset' color='secondary' onClick={handleClose}>
             Cancel

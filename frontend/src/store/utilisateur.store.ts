@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 // eslint-disable-next-line import/no-unresolved
 import api from '@/lib/api'
 
-import type { UtilisateurType } from '@/types/userTypes'
+import type { CompteType, UtilisateurType } from '@/types/userTypes'
 
 export interface UtilisateurState {
   users: UtilisateurType[] | null
@@ -17,6 +17,7 @@ export interface UtilisateurState {
   createUser: (user: UtilisateurType) => Promise<UtilisateurType> | Promise<any>
   updateUser: (user: UtilisateurType) => Promise<any>
   getUserById: (id: number) => Promise<UtilisateurType>
+  createCompte: (compte: CompteType) => Promise<CompteType>
 }
 
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
@@ -91,6 +92,24 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
 
       set({ loading: false })
       toast.success('User updated successfully')
+
+      return data
+    } catch (error: any) {
+      set({ loading: false })
+      toast.error(error?.message || error.response.message || 'Unexpected error !')
+
+      return error
+    }
+  },
+
+  createCompte: async (compte: CompteType) => {
+    try {
+      console.log('from store :', compte)
+      set({ loading: true })
+      const { data } = await api.post('/Compte', compte)
+
+      set({ loading: false })
+      toast.success('Compte créé avec succès ')
 
       return data
     } catch (error: any) {

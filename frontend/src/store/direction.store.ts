@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { create } from 'zustand'
 
 import type { DirectionType } from '@/types/directionType'

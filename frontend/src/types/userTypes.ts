@@ -19,6 +19,7 @@ export interface CompteType {
   id?: number
   pseudo: string
   profile: ProfileType
+  utilisateur?: UtilisateurType
 }
 
 export interface ProfileType {
