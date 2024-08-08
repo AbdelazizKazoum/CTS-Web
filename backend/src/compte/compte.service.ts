@@ -3,7 +3,11 @@ import { CreateCompteDto } from './dto/create-compte.dto';
 import { UpdateCompteDto } from './dto/update-compte.dto';
 import { Compte } from 'src/entities/compte.entity';
 import { Repository } from 'typeorm';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Utilisateur } from 'src/entities/utilisateur.entity';
 
@@ -42,6 +46,34 @@ export class CompteService {
       await this.utilisateurRepository.save(user);
 
       return compte;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async updateCompte(id: number, updateCompteDto: UpdateCompteDto) {
+    try {
+      const getCompte = await this.compteRepository.findOneBy({
+        id: updateCompteDto.id,
+      });
+
+      if (!getCompte) throw new NotFoundException('Compte not exists !');
+
+      if (updateCompteDto.pass) {
+        const hashPass = await bcrypt.hash(updateCompteDto.pass, salt);
+
+        return await this.compteRepository.update(id, {
+          ...getCompte,
+          pass: hashPass,
+        });
+      }
+
+      if (updateCompteDto.profile) {
+        return await this.compteRepository.update(id, {
+          ...getCompte,
+          profile: updateCompteDto.profile,
+        });
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

@@ -33,7 +33,7 @@ export class CompteController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCompteDto: UpdateCompteDto) {
-    return this.compteService.update(+id, updateCompteDto);
+    return this.compteService.updateCompte(+id, updateCompteDto);
   }
 
   @Delete(':id')
