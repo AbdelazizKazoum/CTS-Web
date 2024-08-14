@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Compte } from './compte.entity';
 import { Direction } from './direction.entity';
+import { Courrier } from './courrier.entity';
 
 @Entity()
 export class Utilisateur {
@@ -34,4 +35,13 @@ export class Utilisateur {
   @ManyToOne(() => Direction, (direction) => direction.utilisateurs)
   @JoinColumn()
   direction: Direction;
+
+  @Column()
+  file: string;
+
+  @OneToMany(() => Courrier, (courrier) => courrier.utilisateur)
+  courrier: Courrier[];
+
+  @OneToMany(() => Courrier, (courrier) => courrier.modifier_par)
+  modifier_courrier: Courrier[];
 }

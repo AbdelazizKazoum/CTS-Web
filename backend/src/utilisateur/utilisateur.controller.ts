@@ -7,7 +7,9 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request, RequestHandler } from 'express';
 import { UtilisateurService } from './utilisateur.service';
@@ -19,6 +21,7 @@ import { Role } from 'src/auth/enums/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UpdateCompteDto } from 'src/compte/dto/update-compte.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(AuthGuard)
 @Controller('utilisateur')
@@ -51,7 +54,15 @@ export class UtilisateurController {
   @Post()
   @UseGuards(RolesGuard)
   @Roles(Role.Admin)
-  async createUser(@Body() createUserDto: CreateUserDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log('hello test files :', createUserDto);
+
+    console.log(file);
+
     return await this.utilisateurService.createUser(createUserDto);
   }
 

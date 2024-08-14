@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-key */
 // React Imports
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -23,6 +23,7 @@ import type { UtilisateurType } from '@/types/userTypes'
 import { UseUtilisateurStore } from '@/store/utilisateur.store'
 import { useDirectionStore } from '@/store/direction.store'
 import type { DirectionType } from '@/types/directionType'
+import FileUploaderSingle from '../fileUploader'
 
 type FormValidateType = {
   nom: string
@@ -31,6 +32,7 @@ type FormValidateType = {
   cin: string
   direction: DirectionType | number | null
   profile: null | number
+  file: any
 }
 
 const AddUserDrawer = ({
@@ -51,6 +53,7 @@ const AddUserDrawer = ({
   const { fetchDirections, directions, loading } = useDirectionStore()
 
   // States
+  const [files, setFiles] = useState<File[]>([])
 
   // Hooks
   const {
@@ -62,12 +65,17 @@ const AddUserDrawer = ({
   } = useForm<FormValidateType>({})
 
   const onSubmit = async (data: FormValidateType) => {
+    const formData = new FormData()
+
+    files.forEach(el => formData.append('file', el, data.nom))
+
     const newUser: UtilisateurType = {
       nom: data.nom,
       prenom: data.prenom,
       matricule: data.matricule,
       cin: data.cin,
-      direction: directions?.find((item: DirectionType) => item.id === data.direction) || null
+      direction: directions?.find((item: DirectionType) => item.id === data.direction) || null,
+      file: formData
     }
 
     // setData([...(userData ?? []), newUser])
@@ -122,7 +130,8 @@ const AddUserDrawer = ({
   }, [fetchDirections])
 
   if (loading) return <CircularProgress />
-  console.log('im rendring :', userData)
+
+  console.log('send files :', files)
 
   return (
     <div>
@@ -142,6 +151,9 @@ const AddUserDrawer = ({
         </div>
         <Divider />
         <div>
+          <div className='flex flex-col gap-6 p-6'>
+            <FileUploaderSingle setFiles={setFiles} files={files} />
+          </div>
           <form onSubmit={handleSubmit(data => onSubmit(data))} className='flex flex-col gap-6 p-6'>
             <Controller
               name='nom'
