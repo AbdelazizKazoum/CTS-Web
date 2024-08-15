@@ -7,16 +7,16 @@ const CourrierHeader = () => {
     <div className='flex flex-wrap items-center justify-between gap-6'>
       <div>
         <Typography variant='h4' className='mbe-1'>
-          Add a new product
+          Ajouter un nouveau courrier{' '}
         </Typography>
-        <Typography>Orders placed across your store</Typography>
+        {/* <Typography>Orders placed across your store</Typography> */}
       </div>
       <div className='flex flex-wrap gap-4'>
         <Button variant='tonal' color='secondary'>
-          Discard
+          Rejeter
         </Button>
-        <Button variant='tonal'>Save Draft</Button>
-        <Button variant='contained'>Publish Product</Button>
+        <Button variant='tonal'>Sauvegarder le brouillon</Button>
+        <Button variant='contained'>Enregistrer le courrier</Button>
       </div>
     </div>
   )

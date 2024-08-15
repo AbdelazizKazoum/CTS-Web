@@ -46,6 +46,7 @@ export class Courrier {
   @JoinColumn()
   utilisateur: Utilisateur;
 
-  @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.courrier)
+  @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.modifier_courrier)
+  @JoinColumn()
   modifier_par: Utilisateur;
 }
