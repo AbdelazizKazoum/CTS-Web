@@ -25,6 +25,7 @@ import CustomTextField from '@core/components/mui/TextField'
 // Style Imports
 // import '@/lib/styles/tiptapEditor.css'
 import '@/lib/styles/tiptapEditor.css'
+import { useForm } from 'react-hook-form'
 
 const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -116,11 +117,12 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
 }
 
 const CourrierInformation = () => {
+  const { handleSubmit } = useForm()
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: 'Write something here...'
+        placeholder: 'Écrivez quelque chose ici...'
       }),
       TextAlign.configure({
         types: ['heading', 'paragraph']
@@ -130,24 +132,45 @@ const CourrierInformation = () => {
 
     content: `
       <p>
-        Keep your account secure with authentication step.
+
       </p>
     `
   })
 
   return (
     <Card>
-      <CardHeader title='Product Information' />
+      <CardHeader title='Informations du courrier' />
       <CardContent>
         <Grid container spacing={6} className='mbe-6'>
           <Grid item xs={12}>
-            <CustomTextField fullWidth label='Product Name' placeholder='iPhone 14' />
+            <CustomTextField fullWidth label='Objet' placeholder='' />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='SKU' placeholder='FXSK123U' />
+            <CustomTextField fullWidth label='Date arrivée' placeholder='' />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Barcode' placeholder='0123-4567' />
+            <CustomTextField fullWidth label='Pré Référence' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Date pré Référence' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Origine' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Référence' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Date Courrier' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Classement' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Date Traitement' placeholder='' />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <CustomTextField fullWidth label='Status' placeholder='' />
           </Grid>
         </Grid>
         <Typography className='mbe-1'>Description (Optional)</Typography>

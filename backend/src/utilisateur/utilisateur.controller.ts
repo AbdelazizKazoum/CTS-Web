@@ -23,36 +23,30 @@ import { UpdateCompteDto } from 'src/compte/dto/update-compte.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('utilisateur')
 export class UtilisateurController {
   constructor(private readonly utilisateurService: UtilisateurService) {}
 
   @Get()
-  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   async getAll(@Req() request: Request): Promise<Utilisateur[]> {
     return await this.utilisateurService.findAll();
   }
 
   @Get('/:id')
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
-  @Roles(Role.utilisateur)
+  @Roles(Role.Admin, Role.utilisateur)
   async getUser(@Param('id') id: number): Promise<Utilisateur> {
     return await this.utilisateurService.findOne(id);
   }
 
   @Get('/cin/:cin')
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
-  @Roles(Role.utilisateur)
+  @Roles(Role.Admin, Role.utilisateur)
   async getByCin(@Param('cin') cin: string): Promise<Utilisateur> {
     return await this.utilisateurService.findOneByCin(cin);
   }
 
   @Post()
-  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @UseInterceptors(FileInterceptor('file'))
   async createUser(
@@ -67,7 +61,6 @@ export class UtilisateurController {
   }
 
   @Put()
-  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   async updateUser(@Body() UpdateUserDto) {
     return await this.utilisateurService.updateUser(UpdateUserDto);

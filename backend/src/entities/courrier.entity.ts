@@ -12,34 +12,34 @@ export class Courrier {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   date_arrivee: Date;
 
-  @Column()
+  @Column({ nullable: true })
   pre_reference: string;
 
-  @Column()
+  @Column({ nullable: true })
   date_pre_reference: string;
 
-  @Column()
+  @Column({ nullable: true })
   origine: string;
 
-  @Column()
+  @Column({ nullable: true })
   reference: string;
 
-  @Column()
+  @Column({ nullable: true })
   date_courrier: Date;
 
-  @Column()
+  @Column({ nullable: true })
   objet: string;
 
-  @Column()
+  @Column({ nullable: true })
   classement: string;
 
-  @Column()
+  @Column({ nullable: true })
   date_traitement: Date;
 
-  @Column()
+  @Column({ default: 'INTERNE' })
   status: string;
 
   @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.courrier)

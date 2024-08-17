@@ -13,6 +13,7 @@ import { DirectionModule } from './direction/direction.module';
 import { Direction } from './entities/direction.entity';
 import { AuthModule } from './auth/auth.module';
 import { Courrier } from './entities/courrier.entity';
+import { CourrierModule } from './courrier/courrier.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Courrier } from './entities/courrier.entity';
     ProfileModule,
     DirectionModule,
     AuthModule,
+    CourrierModule,
   ],
   controllers: [AppController],
   providers: [AppService],
