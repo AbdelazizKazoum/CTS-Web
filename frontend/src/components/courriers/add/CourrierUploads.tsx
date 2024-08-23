@@ -2,7 +2,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
 // Next Imports
 import Link from 'next/link'
@@ -48,14 +48,17 @@ const Dropzone = styled(AppReactDropzone)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const CourrierUploads = () => {
-  // States
-  const [files, setFiles] = useState<File[]>([])
-
+const CourrierUploads = ({
+  file,
+  setFile
+}: {
+  file?: File | null
+  setFile: Dispatch<SetStateAction<File | null | undefined>>
+}) => {
   // Hooks
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      setFile(Object.assign(acceptedFiles[0]))
     }
   })
 
@@ -67,14 +70,11 @@ const CourrierUploads = () => {
     }
   }
 
-  const handleRemoveFile = (file: FileProp) => {
-    const uploadedFiles = files
-    const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-
-    setFiles([...filtered])
+  const handleRemoveFile = () => {
+    setFile(null)
   }
 
-  const fileList = files.map((file: FileProp) => (
+  const fileList = (file: File) => (
     <ListItem key={file.name} className='pis-4 plb-3'>
       <div className='file-details'>
         <div className='file-preview'>{renderFilePreview(file)}</div>
@@ -89,14 +89,14 @@ const CourrierUploads = () => {
           </Typography>
         </div>
       </div>
-      <IconButton onClick={() => handleRemoveFile(file)}>
+      <IconButton onClick={() => handleRemoveFile()}>
         <i className='tabler-x text-xl' />
       </IconButton>
     </ListItem>
-  ))
+  )
 
   const handleRemoveAllFiles = () => {
-    setFiles([])
+    setFile(null)
   }
 
   return (
@@ -131,9 +131,9 @@ const CourrierUploads = () => {
               </Button>
             </div>
           </div>
-          {files.length ? (
+          {file !== null ? (
             <>
-              <List>{fileList}</List>
+              <List>{file && fileList(file)}</List>
               <div className='buttons'>
                 <Button color='error' variant='tonal' onClick={handleRemoveAllFiles}>
                   Remove All

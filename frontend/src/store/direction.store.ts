@@ -15,7 +15,7 @@ interface DirectionState {
 
 export const useDirectionStore = create<DirectionState>(set => ({
   directions: null,
-  loading: false,
+  loading: false, 
   error: '',
 
   fetchDirections: async () => {

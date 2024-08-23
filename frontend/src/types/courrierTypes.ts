@@ -23,5 +23,7 @@ export interface CourrierType {
 
   utilisateur: UtilisateurType
 
-  modifier_par: UtilisateurType
+  modifier_par?: UtilisateurType
+
+  desciption?: string
 }

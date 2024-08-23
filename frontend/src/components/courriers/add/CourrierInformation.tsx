@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable import/no-unresolved */
 'use client'
 
@@ -25,7 +26,13 @@ import CustomTextField from '@core/components/mui/TextField'
 // Style Imports
 // import '@/lib/styles/tiptapEditor.css'
 import '@/lib/styles/tiptapEditor.css'
-import { useForm } from 'react-hook-form'
+
+import { Controller } from 'react-hook-form'
+import type { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
+
+import { Button } from '@mui/material'
+
+import type { CourrierType } from '@/types/courrierTypes'
 
 const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -116,8 +123,17 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   )
 }
 
-const CourrierInformation = () => {
-  const { handleSubmit } = useForm()
+const CourrierInformation = ({
+  handleSubmit,
+  control,
+  errors,
+  onSubmit
+}: {
+  handleSubmit: UseFormHandleSubmit<CourrierType, undefined>
+  control: Control<CourrierType, any>
+  errors: FieldErrors<CourrierType>
+  onSubmit: (data: any) => void
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -141,46 +157,191 @@ const CourrierInformation = () => {
     <Card>
       <CardHeader title='Informations du courrier' />
       <CardContent>
-        <Grid container spacing={6} className='mbe-6'>
-          <Grid item xs={12}>
-            <CustomTextField fullWidth label='Objet' placeholder='' />
+        <form action='' onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={6} className='mbe-6'>
+            <Grid item xs={12}>
+              <Controller
+                name='objet'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Objet'
+                    placeholder=''
+                    {...(errors.objet && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='date_arrivee'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Date arrivée'
+                    placeholder=''
+                    {...(errors.date_arrivee && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='origine'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Origine'
+                      placeholder=''
+                      {...(errors.origine && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='pre_reference'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Pré Référence'
+                    placeholder=''
+                    {...(errors.pre_reference && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='date_pre_reference'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Date pré Référence'
+                    placeholder=''
+                    {...(errors.date_pre_reference && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='reference'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Référence'
+                      placeholder=''
+                      {...(errors.reference && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='date_courrier'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Date Courrie'
+                      placeholder=''
+                      {...(errors.date_courrier && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='classement'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Classement'
+                      placeholder=''
+                      {...(errors.classement && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='date_traitement'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Date Traitement'
+                      placeholder=''
+                      {...(errors.date_traitement && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='status'
+                control={control}
+                rules={{ required: true }}
+                render={function ({ field }) {
+                  return (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Status'
+                      placeholder=''
+                      {...(errors.status && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    />
+                  )
+                }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Date arrivée' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Pré Référence' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Date pré Référence' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Origine' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Référence' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Date Courrier' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Classement' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Date Traitement' placeholder='' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <CustomTextField fullWidth label='Status' placeholder='' />
-          </Grid>
-        </Grid>
-        <Typography className='mbe-1'>Description (Optional)</Typography>
-        <Card className='p-0 border shadow-none'>
-          <CardContent className='p-0'>
-            <EditorToolbar editor={editor} />
-            <Divider className='mli-6' />
-            <EditorContent editor={editor} className='bs-[135px] overflow-y-auto flex ' />
-          </CardContent>
-        </Card>
+          <Typography className='mbe-1'>Description (Optional)</Typography>
+          <Card className='p-0 border shadow-none'>
+            <CardContent className='p-0'>
+              <EditorToolbar editor={editor} />
+              <Divider className='mli-6' />
+              <EditorContent editor={editor} className='bs-[135px] overflow-y-auto flex ' />
+            </CardContent>
+          </Card>
+          <Button type='submit' variant='tonal'>
+            Submit
+          </Button>
+        </form>
       </CardContent>
     </Card>
   )
