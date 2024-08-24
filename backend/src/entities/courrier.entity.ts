@@ -42,6 +42,12 @@ export class Courrier {
   @Column({ default: 'INTERNE' })
   status: string;
 
+  @Column()
+  filePath: string;
+
+  @Column({ default: 'ENTRANT' })
+  type: string;
+
   @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.courrier)
   @JoinColumn()
   utilisateur: Utilisateur;

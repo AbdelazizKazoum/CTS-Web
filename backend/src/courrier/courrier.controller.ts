@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { CourrierService } from './courrier.service';
 import { CreateCourrierDto } from './dto/create-courrier.dto';
@@ -37,17 +38,15 @@ export class CourrierController {
         destination: './uploads',
         filename: (req: Request, file, callback) => {
           console.log('req :', req.body.formData);
-          const formData = JSON.parse(req.body('formData'));
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);
-          const objet = formData.objet;
-          const randomName = Array(4)
+          const randomName = Array(10)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString())
             .join('');
           callback(
             null,
-            `${objet.split(' ').join('-')}_${randomName}${fileExtName}`,
+            `${name.split(' ').join('_')}${randomName}${fileExtName}`,
           );
         },
       }),
@@ -68,17 +67,22 @@ export class CourrierController {
   create(
     @UploadedFile() file: Express.Multer.File,
     @Body('formData') data: string,
+    @Req() req,
   ) {
     const courrier = JSON.parse(data);
 
     console.log('courrier data ;', courrier);
     console.log('file :', file);
 
-    const newCourrier = this.courrierService.create(courrier);
+    const newCourrier = this.courrierService.create({
+      ...courrier,
+      utilisateur: req.user,
+      filePath: `uploads/${file.filename}`,
+    });
 
     console.log('file', file);
 
-    return { ...file, filePath: `uploads/${file.filename}` };
+    return newCourrier;
   }
 
   @Get()

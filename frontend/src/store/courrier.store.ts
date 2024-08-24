@@ -14,7 +14,7 @@ interface CourrierStateType {
   selectedCourrier: CourrierType | null
 
   fetchCourriers: () => Promise<CourrierType[]>
-  createCourrier: (courrier: CourrierType) => Promise<CourrierType>
+  createCourrier: (courrier: any) => Promise<CourrierType>
   getCourrier: (id: number) => Promise<CourrierType>
 }
 
@@ -47,12 +47,13 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
       const res = await api.post('/courrier', courrier)
 
       set({ status: 'success' })
+      toast.success('Le courrier a été enregistré avec succès ')
 
       return res.data
     } catch (error: any) {
       set({ status: 'rejected' })
       console.log(error)
-      toast.error(error.message ? error.message : error.data.message)
+      toast.error(error.response ? error.response.data.message : error.message ? error.message : error.data?.message)
 
       return null
     } finally {

@@ -1,6 +1,9 @@
+/* eslint-disable import/default */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable import/no-unresolved */
 'use client'
+
+import React from 'react'
 
 // MUI Imports
 import Divider from '@mui/material/Divider'
@@ -31,6 +34,8 @@ import { Controller } from 'react-hook-form'
 import type { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
 
 import { Button } from '@mui/material'
+
+import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
 
 import type { CourrierType } from '@/types/courrierTypes'
 
@@ -127,12 +132,14 @@ const CourrierInformation = ({
   handleSubmit,
   control,
   errors,
-  onSubmit
+  onSubmit,
+  formRef
 }: {
   handleSubmit: UseFormHandleSubmit<CourrierType, undefined>
   control: Control<CourrierType, any>
   errors: FieldErrors<CourrierType>
   onSubmit: (data: any) => void
+  formRef: React.RefObject<HTMLFormElement>
 }) => {
   const editor = useEditor({
     extensions: [
@@ -157,7 +164,7 @@ const CourrierInformation = ({
     <Card>
       <CardHeader title='Informations du courrier' />
       <CardContent>
-        <form action='' onSubmit={handleSubmit(onSubmit)}>
+        <form ref={formRef} action='' onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={6} className='mbe-6'>
             <Grid item xs={12}>
               <Controller
@@ -180,14 +187,31 @@ const CourrierInformation = ({
                 name='date_arrivee'
                 control={control}
                 rules={{ required: true }}
-                render={({ field }) => (
-                  <CustomTextField
-                    {...field}
-                    fullWidth
-                    label='Date arrivée'
-                    placeholder=''
-                    {...(errors.date_arrivee && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                render={({ field: { value, onChange } }) => (
+                  <AppReactDatepicker
+                    selected={value}
+                    showYearDropdown
+                    showMonthDropdown
+                    onChange={onChange}
+                    placeholderText='MM/DD/YYYY'
+                    customInput={
+                      <CustomTextField
+                        value={value}
+                        onChange={onChange}
+                        fullWidth
+                        label='Date arrivée'
+                        {...(errors.date_arrivee && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                      />
+                    }
                   />
+
+                  // <CustomTextField
+                  //   {...field}
+                  //   fullWidth
+                  //   label='Date arrivée'
+                  //   placeholder=''
+                  //   {...(errors.date_arrivee && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  // />
                 )}
               />
             </Grid>
@@ -228,13 +252,22 @@ const CourrierInformation = ({
               <Controller
                 name='date_pre_reference'
                 control={control}
-                render={({ field }) => (
-                  <CustomTextField
-                    {...field}
-                    fullWidth
-                    label='Date pré Référence'
-                    placeholder=''
-                    {...(errors.date_pre_reference && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                render={({ field: { value, onChange } }) => (
+                  <AppReactDatepicker
+                    selected={value}
+                    showYearDropdown
+                    showMonthDropdown
+                    onChange={onChange}
+                    placeholderText='MM/DD/YYYY'
+                    customInput={
+                      <CustomTextField
+                        value={value}
+                        onChange={onChange}
+                        fullWidth
+                        label='Date pré Référence'
+                        {...(errors.date_pre_reference && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                      />
+                    }
                   />
                 )}
               />
@@ -262,14 +295,23 @@ const CourrierInformation = ({
                 name='date_courrier'
                 control={control}
                 rules={{ required: true }}
-                render={function ({ field }) {
+                render={function ({ field: { value, onChange } }) {
                   return (
-                    <CustomTextField
-                      {...field}
-                      fullWidth
-                      label='Date Courrie'
-                      placeholder=''
-                      {...(errors.date_courrier && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    <AppReactDatepicker
+                      selected={value}
+                      showYearDropdown
+                      showMonthDropdown
+                      onChange={onChange}
+                      placeholderText='MM/DD/YYYY'
+                      customInput={
+                        <CustomTextField
+                          value={value}
+                          onChange={onChange}
+                          fullWidth
+                          label='Date Courrie'
+                          {...(errors.date_courrier && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                        />
+                      }
                     />
                   )
                 }}
@@ -298,14 +340,23 @@ const CourrierInformation = ({
                 name='date_traitement'
                 control={control}
                 rules={{ required: true }}
-                render={function ({ field }) {
+                render={function ({ field: { value, onChange } }) {
                   return (
-                    <CustomTextField
-                      {...field}
-                      fullWidth
-                      label='Date Traitement'
-                      placeholder=''
-                      {...(errors.date_traitement && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                    <AppReactDatepicker
+                      selected={value}
+                      showYearDropdown
+                      showMonthDropdown
+                      onChange={onChange}
+                      placeholderText='MM/DD/YYYY'
+                      customInput={
+                        <CustomTextField
+                          value={value}
+                          onChange={onChange}
+                          fullWidth
+                          label='Date Traitement'
+                          {...(errors.date_traitement && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                        />
+                      }
                     />
                   )
                 }}
