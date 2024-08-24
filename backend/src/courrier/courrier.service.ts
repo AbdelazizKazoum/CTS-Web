@@ -23,11 +23,16 @@ export class CourrierService {
   }
 
   async findAll() {
-    return await this.courrierRepository.find();
+    return await this.courrierRepository.find({
+      relations: ['utilisateur', 'modifier_par'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} courrier`;
+  async findOne(id: number) {
+    return await this.courrierRepository.findOne({
+      where: { id },
+      relations: ['utilisateur', 'modifier_par'],
+    });
   }
 
   update(id: number, updateCourrierDto: UpdateCourrierDto) {

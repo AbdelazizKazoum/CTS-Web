@@ -5,7 +5,7 @@ export interface CourrierType {
 
   pre_reference: string
 
-  date_pre_reference: string
+  date_pre_reference: Date
 
   origine: string
 
@@ -20,6 +20,10 @@ export interface CourrierType {
   date_traitement: Date
 
   status: string
+
+  type: string
+
+  destinataire?: string
 
   utilisateur: UtilisateurType
 

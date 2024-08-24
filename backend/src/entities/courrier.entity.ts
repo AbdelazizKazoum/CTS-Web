@@ -48,6 +48,9 @@ export class Courrier {
   @Column({ default: 'ENTRANT' })
   type: string;
 
+  @Column({ default: null })
+  destinataire: string;
+
   @ManyToOne(() => Utilisateur, (utilisateur) => utilisateur.courrier)
   @JoinColumn()
   utilisateur: Utilisateur;

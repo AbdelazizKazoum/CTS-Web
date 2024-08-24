@@ -4,9 +4,6 @@
 // React Imports
 import type { Dispatch, SetStateAction } from 'react'
 
-// Next Imports
-import Link from 'next/link'
-
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -95,28 +92,10 @@ const CourrierUploads = ({
     </ListItem>
   )
 
-  const handleRemoveAllFiles = () => {
-    setFile(null)
-  }
-
   return (
     <Dropzone>
       <Card>
-        <CardHeader
-          title='Product Image'
-          action={
-            <Typography
-              component={Link}
-              href='/'
-              onClick={e => e.preventDefault()}
-              color='primary'
-              className='font-medium'
-            >
-              Add media from URL
-            </Typography>
-          }
-          sx={{ '& .MuiCardHeader-action': { alignSelf: 'center' } }}
-        />
+        <CardHeader title='Courrier' sx={{ '& .MuiCardHeader-action': { alignSelf: 'center' } }} />
         <CardContent>
           <div {...getRootProps({ className: 'dropzone' })}>
             <input {...getInputProps()} />
@@ -124,22 +103,22 @@ const CourrierUploads = ({
               <CustomAvatar variant='rounded' skin='light' color='secondary'>
                 <i className='tabler-upload' />
               </CustomAvatar>
-              <Typography variant='h4'>Drag and Drop Your Image Here.</Typography>
-              <Typography color='text.disabled'>or</Typography>
+              <Typography variant='h4'>Glissez et déposez votre document ici.</Typography>
+              <Typography color='text.disabled'>ou</Typography>
               <Button variant='tonal' size='small'>
-                Browse Image
+                Parcourir
               </Button>
             </div>
           </div>
           {file !== null ? (
             <>
               <List>{file && fileList(file)}</List>
-              <div className='buttons'>
+              {/* <div className='buttons'>
                 <Button color='error' variant='tonal' onClick={handleRemoveAllFiles}>
                   Remove All
                 </Button>
                 <Button variant='contained'>Upload Files</Button>
-              </div>
+              </div> */}
             </>
           ) : null}
         </CardContent>

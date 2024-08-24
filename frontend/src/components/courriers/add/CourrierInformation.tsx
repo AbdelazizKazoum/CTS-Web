@@ -33,7 +33,7 @@ import '@/lib/styles/tiptapEditor.css'
 import { Controller } from 'react-hook-form'
 import type { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
 
-import { Button } from '@mui/material'
+import { FormHelperText, MenuItem } from '@mui/material'
 
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
 
@@ -367,14 +367,46 @@ const CourrierInformation = ({
                 name='status'
                 control={control}
                 rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField select fullWidth label='Status' {...field} error={Boolean(errors.status)}>
+                    <MenuItem value=''>Selectionner statut</MenuItem>
+                    <MenuItem value='ENTRANT'>INTERNE</MenuItem>
+                    <MenuItem value='EXTERNE'>EXTERNE</MenuItem>
+                  </CustomTextField>
+                )}
+              />
+              {errors.status && <FormHelperText error>Ce champ est obligatoire.</FormHelperText>}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='type'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField select fullWidth label='Type' {...field} error={Boolean(errors.type)}>
+                    <MenuItem value=''>Selectionner Type</MenuItem>
+                    <MenuItem value='ENTRANT'>Entrant</MenuItem>
+                    <MenuItem value='SORTANT'>Sortant</MenuItem>
+                  </CustomTextField>
+                )}
+              />
+              {errors.type && <FormHelperText error>This field is required.</FormHelperText>}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name='destinataire'
+                control={control}
+                rules={{ required: true }}
                 render={function ({ field }) {
                   return (
                     <CustomTextField
                       {...field}
                       fullWidth
-                      label='Status'
+                      label='Destinataire'
                       placeholder=''
-                      {...(errors.status && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                      {...(errors.destinataire && { error: true, helperText: 'Ce champ est obligatoire.' })}
                     />
                   )
                 }}
@@ -389,9 +421,6 @@ const CourrierInformation = ({
               <EditorContent editor={editor} className='bs-[135px] overflow-y-auto flex ' />
             </CardContent>
           </Card>
-          <Button type='submit' variant='tonal'>
-            Submit
-          </Button>
         </form>
       </CardContent>
     </Card>

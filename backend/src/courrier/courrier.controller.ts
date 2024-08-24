@@ -12,6 +12,8 @@ import {
   UploadedFile,
   BadRequestException,
   Req,
+  NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { CourrierService } from './courrier.service';
 import { CreateCourrierDto } from './dto/create-courrier.dto';
@@ -23,7 +25,8 @@ import { Role } from 'src/auth/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { stat } from 'node:fs/promises';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('courrier')
@@ -77,12 +80,30 @@ export class CourrierController {
     const newCourrier = this.courrierService.create({
       ...courrier,
       utilisateur: req.user,
-      filePath: `uploads/${file.filename}`,
+      filePath: file.filename,
     });
 
     console.log('file', file);
 
     return newCourrier;
+  }
+
+  @Get('file/:filePath')
+  async findFile(@Param('filePath') filePath: string, @Res() res: Response) {
+    const fileFullPath = join(process.cwd(), 'uploads', filePath);
+
+    console.log('test filepath :', fileFullPath);
+    try {
+      await stat(fileFullPath);
+    } catch (error) {
+      throw new NotFoundException('Fichier non trouvé');
+    }
+
+    res.sendFile(fileFullPath, (err) => {
+      if (err) {
+        throw new NotFoundException('Error serving file');
+      }
+    });
   }
 
   @Get()
