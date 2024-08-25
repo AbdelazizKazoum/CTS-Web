@@ -385,7 +385,6 @@ const CourrierInformation = ({
                 rules={{ required: true }}
                 render={({ field }) => (
                   <CustomTextField select fullWidth label='Type' {...field} error={Boolean(errors.type)}>
-                    <MenuItem value=''>Selectionner Type</MenuItem>
                     <MenuItem value='ENTRANT'>Entrant</MenuItem>
                     <MenuItem value='SORTANT'>Sortant</MenuItem>
                   </CustomTextField>

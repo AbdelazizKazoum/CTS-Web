@@ -36,11 +36,9 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       set({ users })
       set({ loading: false })
 
-      console.log('test data from the api :', data)
-
       return users
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      toast.error(error.response ? error.response.data.message : error.message)
       set({ loading: false, users: [] })
     }
   },

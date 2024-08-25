@@ -4,18 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 
 import Link from 'next/link'
 
-import {
-  Button,
-  Card,
-  CardHeader,
-  Checkbox,
-  Icon,
-  IconButton,
-  MenuItem,
-  TablePagination,
-  TextFieldProps,
-  Typography
-} from '@mui/material'
+import { useRouter } from 'next/navigation'
+
+import type { TextFieldProps } from '@mui/material'
+
+import { Button, Card, CardHeader, IconButton, MenuItem, TablePagination, Typography } from '@mui/material'
 
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
@@ -38,32 +31,37 @@ import classNames from 'classnames'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import type { UtilisateurType } from '@/types/userTypes'
-import TablePaginationComponent from '../TablePaginationComponent'
+import TablePaginationComponent from '@/components/TablePaginationComponent'
 
 import OptionMenu from '@/@core/components/option-menu'
 import CustomTextField from '@/@core/components/mui/TextField'
-import TableFilters from './tableFilters'
-import AddUserDrawer from './addUserDrawer'
 
-type UsersTypeWithAction = UtilisateurType & {
+import TableFilters from './tableFilters'
+
+import type { CourrierType } from '@/types/courrierTypes'
+
+type CourriersTypeWithAction = CourrierType & {
   action?: string
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<UsersTypeWithAction>()
+const columnHelper = createColumnHelper<CourriersTypeWithAction>()
 
-export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) => {
+export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null }) => {
   // States
-  const [addUserOpen, setAddUserOpen] = useState(false)
+  // const [openCourrier, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
 
   // const [filteredData, setFilteredData] = useState()
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const [data, setData] = useState<UtilisateurType[] | null>(...[tableData])
-  const [user, setUser] = useState<UtilisateurType | null>()
-  const [formMode, setFormMode] = useState('new')
+  const [data, setData] = useState<CourrierType[] | null>(...[tableData])
+  const [courrier, setCourrier] = useState<CourrierType | null>()
+
+  // const [formMode, setFormMode] = useState('edit')
+
+  //
+  const router = useRouter()
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -107,7 +105,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
     return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
   }
 
-  const columns = useMemo<ColumnDef<UsersTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<CourriersTypeWithAction, any>[]>(
     () => [
       // {
       //   id: 'select',
@@ -131,58 +129,114 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
       //     />
       //   )
       // },
-      columnHelper.accessor('nom', {
-        header: 'Nom',
+      columnHelper.accessor('id', {
+        header: 'Id',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.nom}
+                {row.original.id}
               </Typography>
             </div>
           </div>
         )
       }),
-      columnHelper.accessor('prenom', {
-        header: 'Prenom',
+      columnHelper.accessor('date_arrivee', {
+        header: 'Date arrivée',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Typography className='capitalize' color='text.primary'>
-              {row.original.prenom}
+              {row.original.date_arrivee && new Date(row.original.date_arrivee).toLocaleDateString()}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('matricule', {
-        header: 'Matricule',
+      columnHelper.accessor('pre_reference', {
+        header: 'Pré Référence',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Typography className='capitalize' color='text.primary'>
-              {row.original.matricule}
+              {row.original.pre_reference}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('direction', {
-        header: 'Direction',
+      columnHelper.accessor('date_pre_reference', {
+        header: 'Date Pré Référence',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Typography className='capitalize' color='text.primary'>
-              {row.original.direction?.nom_direction}
+              {row.original.date_pre_reference && new Date(row.original.date_pre_reference).toLocaleDateString()}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('compte', {
-        header: 'Compte',
+      columnHelper.accessor('origine', {
+        header: 'Origine',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
             <Typography className='capitalize' color='text.primary'>
-              {row.original?.compte}
+              {row.original?.origine}
             </Typography>
           </div>
         )
       }),
+
+      columnHelper.accessor('reference', {
+        header: 'Référence',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original?.reference}
+            </Typography>
+          </div>
+        )
+      }),
+
+      columnHelper.accessor('date_courrier', {
+        header: 'Date courrier',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original?.date_courrier && new Date(row.original?.date_courrier).toLocaleDateString()}
+            </Typography>
+          </div>
+        )
+      }),
+
+      columnHelper.accessor('objet', {
+        header: 'Objet',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original?.objet}
+            </Typography>
+          </div>
+        )
+      }),
+
+      columnHelper.accessor('classement', {
+        header: 'Classement',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original?.classement}
+            </Typography>
+          </div>
+        )
+      }),
+
+      columnHelper.accessor('date_traitement', {
+        header: 'Date Traitment',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <Typography className='capitalize' color='text.primary'>
+              {row.original?.date_traitement && new Date(row.original?.date_traitement).toLocaleDateString()}
+            </Typography>
+          </div>
+        )
+      }),
+
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
@@ -191,7 +245,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={`/utilisateurs/view/${row.original.id}`}>
+              <Link href={`/courrier/view/${row.original.id}`}>
                 <i
                   onClick={() => {
                     // setFormMode('view')
@@ -219,9 +273,9 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
                   menuItemProps: {
                     className: 'flex items-center gap-2 text-textSecondary',
                     onClick: () => {
-                      setUser(row.original)
-                      setFormMode('edit')
-                      setAddUserOpen(!addUserOpen)
+                      setCourrier(row.original)
+
+                      // setAddUserOpen(!addUserOpen)
                     }
                   }
                 }
@@ -237,7 +291,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
   )
 
   const table = useReactTable({
-    data: data as UtilisateurType[],
+    data: data as CourrierType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -265,6 +319,8 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
+  console.log('courriers', courrier)
+
   return (
     <div>
       <Card>
@@ -285,7 +341,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
             <DebouncedInput
               value={globalFilter ?? ''}
               onChange={value => setGlobalFilter(String(value))}
-              placeholder='Search User'
+              placeholder='Search Courrier'
               className='is-full sm:is-auto'
             />
             <Button
@@ -300,13 +356,12 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
               variant='contained'
               startIcon={<i className='tabler-plus' />}
               onClick={() => {
-                setFormMode('new')
-                setUser(null)
-                setAddUserOpen(!addUserOpen)
+                setCourrier(null)
+                router.push('/courriers/ajouter')
               }}
               className='is-full sm:is-auto'
             >
-              Add New User
+              Ajouter un nouveau courrier
             </Button>
           </div>
         </div>
@@ -339,11 +394,12 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
                 </tr>
               ))}
             </thead>
-            {table?.getFilteredRowModel().rows.length === 0 ? (
+            {table?.getFilteredRowModel()?.rows?.length === 0 ? (
               <tbody>
                 <tr>
                   <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                    No data available
+                    {}
+                    Pas de données disponibles{' '}
                   </td>
                 </tr>
               </tbody>
@@ -375,13 +431,6 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
           }}
         />
       </Card>
-      <AddUserDrawer
-        open={addUserOpen}
-        handleClose={() => setAddUserOpen(!addUserOpen)}
-        userData={user}
-        setData={setData}
-        formMode={formMode}
-      />
     </div>
   )
 }

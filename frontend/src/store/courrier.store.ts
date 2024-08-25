@@ -31,9 +31,12 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
       set({ courriers: res.data })
       set({ status: 'success' })
 
+      console.log('test data from api :', res)
+
       return res.data
     } catch (error: any) {
       set({ status: 'rejected' })
+      set({ courriers: [] })
       toast.error(error.message ? error.message : error.data.message)
 
       return null

@@ -1,6 +1,8 @@
 import type { UtilisateurType } from './userTypes'
 
 export interface CourrierType {
+  id?: number
+
   date_arrivee: Date
 
   pre_reference: string
