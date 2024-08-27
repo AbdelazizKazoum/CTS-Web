@@ -12,10 +12,11 @@ import Grid from '@mui/material/Grid'
 // import MenuItem from '@mui/material/MenuItem'
 
 // Type Imports
+import { MenuItem } from '@mui/material'
+
 import type { UtilisateurType } from '@/types/userTypes'
 
 import type { CourrierType } from '@/types/courrierTypes'
-import { MenuItem } from '@mui/material'
 
 const TableFilters = ({
   setData,

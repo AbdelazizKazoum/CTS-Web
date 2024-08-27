@@ -12,10 +12,12 @@ interface CourrierStateType {
   status: string
   loading: boolean
   selectedCourrier: CourrierType | null
+  document: string
 
   fetchCourriers: () => Promise<CourrierType[]>
   createCourrier: (courrier: any) => Promise<CourrierType>
   getCourrier: (id: number) => Promise<CourrierType>
+  getFile: (filePath: string) => Promise<string>
 }
 
 export const useCourrierStore = create<CourrierStateType>(set => ({
@@ -23,6 +25,8 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
   status: 'idle',
   loading: false,
   selectedCourrier: null,
+  document: '',
+
   fetchCourriers: async () => {
     try {
       set({ loading: true })
@@ -71,6 +75,30 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
 
       set({ status: 'success' })
       set({ selectedCourrier: res.data })
+
+      return res.data
+    } catch (error: any) {
+      set({ status: 'rejected' })
+      toast.error(error.message ? error.message : error.data.message)
+
+      return null
+    } finally {
+      set({ loading: false })
+    }
+  },
+
+  getFile: async (filePath: string) => {
+    try {
+      set({ loading: true })
+
+      const res = await api.get(`/courrier/file/${filePath}`, {
+        responseType: 'blob'
+      })
+
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+
+      set({ status: 'success' })
+      set({ document: url })
 
       return res.data
     } catch (error: any) {
