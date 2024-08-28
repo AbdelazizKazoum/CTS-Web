@@ -18,6 +18,7 @@ interface CourrierStateType {
   createCourrier: (courrier: any) => Promise<CourrierType>
   getCourrier: (id: number) => Promise<CourrierType>
   getFile: (filePath: string) => Promise<string>
+  setSelectedCourrier: (courrier: CourrierType) => void
 }
 
 export const useCourrierStore = create<CourrierStateType>(set => ({
@@ -109,5 +110,9 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
     } finally {
       set({ loading: false })
     }
+  },
+
+  setSelectedCourrier: async (courrier: CourrierType) => {
+    set({ selectedCourrier: courrier })
   }
 }))

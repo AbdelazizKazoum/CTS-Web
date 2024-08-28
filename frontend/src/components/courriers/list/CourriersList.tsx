@@ -39,6 +39,7 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import TableFilters from './tableFilters'
 
 import type { CourrierType } from '@/types/courrierTypes'
+import { useCourrierStore } from '@/store/courrier.store'
 
 type CourriersTypeWithAction = CourrierType & {
   action?: string
@@ -57,6 +58,9 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
 
   const [data, setData] = useState<CourrierType[] | null>(...[tableData])
   const [courrier, setCourrier] = useState<CourrierType | null>()
+
+  //actions
+  const { setSelectedCourrier } = useCourrierStore()
 
   // const [formMode, setFormMode] = useState('edit')
 
@@ -273,7 +277,8 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
                   menuItemProps: {
                     className: 'flex items-center gap-2 text-textSecondary',
                     onClick: () => {
-                      setCourrier(row.original)
+                      setSelectedCourrier(row.original)
+                      router.push('/courriers/modifier')
 
                       // setAddUserOpen(!addUserOpen)
                     }

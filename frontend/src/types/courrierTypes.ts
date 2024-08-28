@@ -32,4 +32,6 @@ export interface CourrierType {
   modifier_par?: UtilisateurType
 
   desciption?: string
+
+  filePath?: string
 }

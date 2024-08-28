@@ -5,27 +5,38 @@
 import CourrierHeader from '@/components/courriers/add/CourrierHeader'
 import CourrierInformation from '@/components/courriers/add/CourrierInformation'
 import CourrierUploads from '@/components/courriers/add/CourrierUploads'
-import { useCourrierStore } from '@/store/courrier.store'
 import type { CourrierType } from '@/types/courrierTypes'
 import Grid from '@mui/material/Grid'
-import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
+import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
-const Index = () => {
+const Index = ({
+  onSubmit,
+  buttonText,
+  title,
+  file,
+  setFile,
+  loading,
+  courrierData
+}: {
+  onSubmit: () => void
+  buttonText: string
+  title: string
+  file: File | null
+  setFile: Dispatch<SetStateAction<File | null | undefined>>
+  loading: boolean
+  courrierData: CourrierType
+}) => {
   const formRef = useRef<HTMLFormElement>(null)
-  const [file, setFile] = useState<File | null>()
-
-  const { createCourrier, loading } = useCourrierStore()
-
-  const router = useRouter()
 
   const {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<CourrierType>()
+  } = useForm<CourrierType>({
+    defaultValues: courrierData
+  })
 
   function submitFormClick() {
     if (formRef.current) {
@@ -39,28 +50,10 @@ const Index = () => {
     }
   }
 
-  async function onSubmit(data: any) {
-    if (file) {
-      const formData = new FormData()
-
-      console.log('data :', data)
-
-      formData.append('file', file, data.object)
-      formData.append('formData', JSON.stringify(data))
-
-      const res = await createCourrier(formData)
-
-      if (res) {
-        router.push('/courriers')
-        console.log(res)
-      }
-    } else toast.error('Vous avez besoin de télécharger un document')
-  }
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CourrierHeader loading={loading} submitFormClick={submitFormClick} />
+        <CourrierHeader buttonText={buttonText} title={title} loading={loading} submitFormClick={submitFormClick} />
       </Grid>
       <Grid item xs={12} md={6}>
         <Grid container spacing={6}>
