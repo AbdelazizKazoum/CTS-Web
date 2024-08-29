@@ -36,7 +36,11 @@ export class CourrierService {
   }
 
   update(id: number, updateCourrierDto: UpdateCourrierDto) {
-    return `This action updates a #${id} courrier`;
+    try {
+      return this.courrierRepository.update(id, updateCourrierDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   remove(id: number) {

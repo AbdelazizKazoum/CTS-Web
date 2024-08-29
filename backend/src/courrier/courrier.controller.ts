@@ -14,6 +14,7 @@ import {
   Req,
   NotFoundException,
   Res,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CourrierService } from './courrier.service';
 import { CreateCourrierDto } from './dto/create-courrier.dto';
@@ -27,6 +28,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Request, Response } from 'express';
 import { stat } from 'node:fs/promises';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('courrier')
@@ -117,11 +120,61 @@ export class CourrierController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin, Role.secretariat)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req: Request, file, callback) => {
+          console.log('req :', req.body.formData);
+          const name = file.originalname.split('.')[0];
+          const fileExtName = extname(file.originalname);
+          const randomName = Array(10)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString())
+            .join('');
+          callback(
+            null,
+            `${name.split(' ').join('_')}${randomName}${fileExtName}`,
+          );
+        },
+      }),
+      limits: {
+        fileSize: 1 * 1024 * 1024, //limit the size to 1mb
+      },
+      fileFilter: (req, file, callback) => {
+        if (file.mimetype !== 'application/pdf') {
+          return callback(
+            new BadRequestException('Only PDF files ar allowed.'),
+            false,
+          );
+        }
+        callback(null, true);
+      },
+    }),
+  )
   update(
+    @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,
-    @Body() updateCourrierDto: UpdateCourrierDto,
+    @Body('formData') data: string,
   ) {
-    return this.courrierService.update(+id, updateCourrierDto);
+    const courrier = JSON.parse(data);
+
+    const uploadFolder = path.join(__dirname, '..', 'uploads');
+    const fullPath = path.join(uploadFolder, courrier.filePath);
+
+    if (!fs.existsSync(fullPath)) {
+      throw new InternalServerErrorException(
+        `File not found: ${courrier.filePath}`,
+      );
+    }
+    fs.unlink(fullPath, (error) => {
+      if (error) {
+        throw new Error(`Faild to modify this courrier`);
+      }
+    });
+
+    return this.courrierService.update(+id, courrier);
   }
 
   @Delete(':id')

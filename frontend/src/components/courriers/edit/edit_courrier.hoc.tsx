@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 import { useCourrierStore } from '@/store/courrier.store'
 
-export const editCourrier = (Component: any) => {
+const editCourrier = (Component: React.ComponentType<any>) => {
   return (props: any) => {
     const { getFile, document, selectedCourrier, loading } = useCourrierStore()
     const [file, setFile] = useState<File | null>()
@@ -20,9 +20,11 @@ export const editCourrier = (Component: any) => {
 
     useEffect(() => {
       ;(async () => {
-        await getFile(selectedCourrier?.filePath || '')
+        const res = await getFile(selectedCourrier?.filePath || '')
+        console.log('res :', res)
+        setFile(res)
       })()
-    })
+    }, [getFile, selectedCourrier])
 
     //On submit :
     async function onSubmit(data: any) {
@@ -63,3 +65,5 @@ export const editCourrier = (Component: any) => {
     )
   }
 }
+
+export default editCourrier

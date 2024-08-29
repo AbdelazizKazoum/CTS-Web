@@ -12,12 +12,12 @@ interface CourrierStateType {
   status: string
   loading: boolean
   selectedCourrier: CourrierType | null
-  document: string
+  document: File | null
 
   fetchCourriers: () => Promise<CourrierType[]>
   createCourrier: (courrier: any) => Promise<CourrierType>
   getCourrier: (id: number) => Promise<CourrierType>
-  getFile: (filePath: string) => Promise<string>
+  getFile: (filePath: string) => Promise<File | null>
   setSelectedCourrier: (courrier: CourrierType) => void
 }
 
@@ -26,7 +26,7 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
   status: 'idle',
   loading: false,
   selectedCourrier: null,
-  document: '',
+  document: null,
 
   fetchCourriers: async () => {
     try {
@@ -96,12 +96,22 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
         responseType: 'blob'
       })
 
-      const url = window.URL.createObjectURL(new Blob([res.data]))
+      // const url = window.URL.createObjectURL(new Blob([res.data]))
+
+      // GENERATE FILES :
+      const blob = new Blob([res.data])
+
+      const file = new File([blob], 'pdfTest.pdf', {
+        type: 'application/pdf',
+        lastModified: 1723730753678 // Set the desired lastModified timestamp
+      })
 
       set({ status: 'success' })
-      set({ document: url })
+      set({ document: file })
 
-      return res.data
+      console.log(' generate file api :', file)
+
+      return file
     } catch (error: any) {
       set({ status: 'rejected' })
       toast.error(error.message ? error.message : error.data.message)

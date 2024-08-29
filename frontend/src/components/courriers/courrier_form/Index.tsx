@@ -18,7 +18,8 @@ const Index = ({
   file,
   setFile,
   loading,
-  courrierData
+  courrierData,
+  courrierFile
 }: {
   onSubmit: () => void
   buttonText: string
@@ -27,6 +28,7 @@ const Index = ({
   setFile: Dispatch<SetStateAction<File | null | undefined>>
   loading: boolean
   courrierData: CourrierType
+  courrierFile: string
 }) => {
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -49,6 +51,9 @@ const Index = ({
       }
     }
   }
+
+  // console.log('courrierFile :', courrierFile)
+  // console.log('file :', file)
 
   return (
     <Grid container spacing={6}>

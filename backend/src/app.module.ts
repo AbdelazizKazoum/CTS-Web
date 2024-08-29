@@ -22,7 +22,7 @@ import { CourrierModule } from './courrier/courrier.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '051688',
+      password: '051688azizKazoum@',
       database: 'cts_web',
       entities: [Utilisateur, Compte, Profile, Direction, Courrier],
       synchronize: true,
