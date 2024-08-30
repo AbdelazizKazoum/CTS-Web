@@ -16,6 +16,7 @@ interface CourrierStateType {
 
   fetchCourriers: () => Promise<CourrierType[]>
   createCourrier: (courrier: any) => Promise<CourrierType>
+  updateCourrier: (idCourrier: number, courrier: any) => Promise<CourrierType>
   getCourrier: (id: number) => Promise<CourrierType>
   getFile: (filePath: string) => Promise<File | null>
   setSelectedCourrier: (courrier: CourrierType) => void
@@ -49,6 +50,8 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
       set({ loading: false })
     }
   },
+
+  //  Creat courrier
   createCourrier: async (courrier: CourrierType) => {
     try {
       set({ loading: true })
@@ -56,6 +59,28 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
 
       set({ status: 'success' })
       toast.success('Le courrier a été enregistré avec succès ')
+
+      return res.data
+    } catch (error: any) {
+      set({ status: 'rejected' })
+      console.log(error)
+      toast.error(error.response ? error.response.data.message : error.message ? error.message : error.data?.message)
+
+      return null
+    } finally {
+      set({ loading: false })
+    }
+  },
+
+  // Creat courrier
+  updateCourrier: async (idCourrier: number, courrier: CourrierType) => {
+    try {
+      set({ loading: true })
+
+      const res = await api.patch(`/courrier/${idCourrier}`, courrier)
+
+      set({ status: 'success' })
+      toast.success('Le courrier a été modifier avec succès ')
 
       return res.data
     } catch (error: any) {

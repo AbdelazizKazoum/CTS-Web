@@ -160,8 +160,10 @@ export class CourrierController {
   ) {
     const courrier = JSON.parse(data);
 
-    const uploadFolder = path.join(__dirname, '..', 'uploads');
+    const uploadFolder = path.join(process.cwd(), 'uploads');
+
     const fullPath = path.join(uploadFolder, courrier.filePath);
+    console.log('🚀 ~ CourrierController ~ fullPath:', fullPath);
 
     if (!fs.existsSync(fullPath)) {
       throw new InternalServerErrorException(

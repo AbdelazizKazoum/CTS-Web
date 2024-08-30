@@ -8,15 +8,19 @@ import { useEffect, useState } from 'react'
 
 // import { toast } from 'react-toastify'
 
+import { useRouter } from 'next/navigation'
+
+import { toast } from 'react-toastify'
+
 import { useCourrierStore } from '@/store/courrier.store'
 
 const editCourrier = (Component: React.ComponentType<any>) => {
   return (props: any) => {
-    const { getFile, document, selectedCourrier, loading } = useCourrierStore()
+    const { getFile, document, selectedCourrier, loading, updateCourrier } = useCourrierStore()
     const [file, setFile] = useState<File | null>()
 
     //hooks
-    // const router = useRouter()
+    const router = useRouter()
 
     useEffect(() => {
       ;(async () => {
@@ -28,6 +32,7 @@ const editCourrier = (Component: React.ComponentType<any>) => {
 
     //On submit :
     async function onSubmit(data: any) {
+      console.log('helloworld :', selectedCourrier)
       if (file) {
         const formData = new FormData()
 
@@ -40,14 +45,13 @@ const editCourrier = (Component: React.ComponentType<any>) => {
         console.log('file :', file)
         console.log('form data :', formData)
 
-        // const res = await createCourrier(formData)
+        const res = await updateCourrier(selectedCourrier?.id, formData)
 
-        //   if (res) {
-        //     router.push('/courriers')
-        //     console.log(res)
-        //   }
-        // } else toast.error('Vous avez besoin de télécharger un document')
-      }
+        if (res) {
+          router.push('/courriers')
+          console.log(res)
+        }
+      } else toast.error('Vous avez besoin de télécharger un document')
     }
 
     return (
