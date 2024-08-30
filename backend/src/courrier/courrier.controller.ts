@@ -165,18 +165,18 @@ export class CourrierController {
     const fullPath = path.join(uploadFolder, courrier.filePath);
     console.log('🚀 ~ CourrierController ~ fullPath:', fullPath);
 
-    if (!fs.existsSync(fullPath)) {
-      throw new InternalServerErrorException(
-        `File not found: ${courrier.filePath}`,
-      );
+    if (fs.existsSync(fullPath)) {
+      fs.unlink(fullPath, (error) => {
+        if (error) {
+          throw new Error(`Faild to modify this courrier`);
+        }
+      });
     }
-    fs.unlink(fullPath, (error) => {
-      if (error) {
-        throw new Error(`Faild to modify this courrier`);
-      }
-    });
 
-    return this.courrierService.update(+id, courrier);
+    return this.courrierService.update(+id, {
+      ...courrier,
+      filePath: file.filename,
+    });
   }
 
   @Delete(':id')

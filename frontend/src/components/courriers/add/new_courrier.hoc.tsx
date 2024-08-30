@@ -2,7 +2,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable padding-line-between-statements */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 // import { useRouter } from 'next/navigation'
 
@@ -14,32 +14,23 @@ import { toast } from 'react-toastify'
 
 import { useCourrierStore } from '@/store/courrier.store'
 
-const editCourrier = (Component: React.ComponentType<any>) => {
+const newCourrier = (Component: React.ComponentType<any>) => {
   return (props: any) => {
-    const { getFile, document, selectedCourrier, loading, updateCourrier } = useCourrierStore()
+    const { document, createCourrier, loading } = useCourrierStore()
     const [file, setFile] = useState<File | null>()
 
     //hooks
     const router = useRouter()
 
-    useEffect(() => {
-      ;(async () => {
-        const res = await getFile(selectedCourrier?.filePath || '')
-        console.log('res :', res)
-        setFile(res)
-      })()
-    }, [getFile, selectedCourrier])
-
     //On submit :
     async function onSubmit(data: any) {
-      console.log('helloworld :', selectedCourrier)
-      if (file && selectedCourrier) {
+      if (file) {
         const formData = new FormData()
 
         formData.append('file', file, data.object)
         formData.append('formData', JSON.stringify(data))
 
-        const res = await updateCourrier(selectedCourrier?.id || -1, formData)
+        const res = await createCourrier(formData)
 
         if (res) {
           router.push('/courriers')
@@ -51,11 +42,11 @@ const editCourrier = (Component: React.ComponentType<any>) => {
       <Component
         {...props}
         courrierFile={document}
-        mode='edit'
+        mode='new'
         onSubmit={onSubmit}
-        title='Modifier courrier'
-        buttonText='Modfier le courrier'
-        courrierData={selectedCourrier}
+        buttonText='Ajouter nouveau courrier'
+        title='Nouveau courrier'
+        courrierData={{}}
         file={file}
         setFile={setFile}
         loading={loading}
@@ -64,4 +55,4 @@ const editCourrier = (Component: React.ComponentType<any>) => {
   }
 }
 
-export default editCourrier
+export default newCourrier

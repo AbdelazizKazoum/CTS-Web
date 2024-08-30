@@ -2,9 +2,9 @@
 /* eslint-disable import/order */
 // MUI Imports
 'use client'
-import CourrierHeader from '@/components/courriers/add/CourrierHeader'
-import CourrierInformation from '@/components/courriers/add/CourrierInformation'
-import CourrierUploads from '@/components/courriers/add/CourrierUploads'
+import CourrierHeader from '@/components/courriers/courrier_form/CourrierHeader'
+import CourrierInformation from '@/components/courriers/courrier_form/CourrierInformation'
+import CourrierUploads from '@/components/courriers/courrier_form/CourrierUploads'
 import type { CourrierType } from '@/types/courrierTypes'
 import Grid from '@mui/material/Grid'
 import type { Dispatch, SetStateAction } from 'react'
@@ -18,8 +18,7 @@ const Index = ({
   file,
   setFile,
   loading,
-  courrierData,
-  courrierFile
+  courrierData
 }: {
   onSubmit: () => void
   buttonText: string

@@ -3,12 +3,22 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
-const CourrierHeader = ({ submitFormClick, loading }: { submitFormClick: () => void; loading: boolean }) => {
+const CourrierHeader = ({
+  submitFormClick,
+  loading,
+  buttonText,
+  title
+}: {
+  submitFormClick: () => void
+  loading: boolean
+  buttonText: string
+  title: string
+}) => {
   return (
     <div className='flex flex-wrap items-center justify-between gap-6'>
       <div>
         <Typography variant='h4' className='mbe-1'>
-          Ajouter un nouveau courrier
+          {title}
         </Typography>
       </div>
       <div className='flex flex-wrap gap-4'>
@@ -23,7 +33,7 @@ const CourrierHeader = ({ submitFormClick, loading }: { submitFormClick: () => v
 
           // startIcon={loading ? <CircularProgress size={20} /> : null}
         >
-          {loading ? <CircularProgress size={20} color='inherit' /> : 'Enregistrer le courrier'}
+          {loading ? <CircularProgress size={20} color='inherit' /> : buttonText}
         </Button>
       </div>
     </div>
