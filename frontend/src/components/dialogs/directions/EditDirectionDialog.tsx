@@ -3,7 +3,7 @@
 'use client'
 
 // React Imports
-import { useEffect, useState, type FormEvent } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState, type FormEvent } from 'react'
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
@@ -25,10 +25,11 @@ import { useDirectionStore } from '@/store/direction.store'
 type DirectionDataProps = {
   open: boolean
   setOpen: (open: boolean) => void
-  data?: DirectionType
+  data?: DirectionType | null
+  setData: any
 }
 
-const EditDirectionDialog = ({ open, setOpen, data }: DirectionDataProps) => {
+const EditDirectionDialog = ({ open, setOpen, data, setData }: DirectionDataProps) => {
   //store
   const { createDirection, updateDirection, loading, fetchDirections } = useDirectionStore()
 
@@ -42,19 +43,27 @@ const EditDirectionDialog = ({ open, setOpen, data }: DirectionDataProps) => {
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
 
-    console.log(nomDirection)
-
     if (data?.id && data.nom_direction) {
       if (nomDirection) {
-        await updateDirection(data.id, { nom_direction: nomDirection })
-        await fetchDirections()
-        handleClose()
+        const res = await updateDirection(data.id, { nom_direction: nomDirection })
+        if (res) {
+          setData((prev: DirectionType[]) =>
+            prev.map((item: DirectionType) => {
+              if (item.id === data.id) {
+                return { ...data, nom_direction: nomDirection }
+              } else return item
+            })
+          )
+          handleClose()
+        }
       }
     } else {
       if (nomDirection) {
-        await createDirection({ nom_direction: nomDirection })
-        await fetchDirections()
-        handleClose()
+        const res = await createDirection({ nom_direction: nomDirection })
+        if (res) {
+          setData((prev: DirectionType[]) => [...prev, res])
+          handleClose()
+        }
       }
     }
   }
@@ -62,8 +71,6 @@ const EditDirectionDialog = ({ open, setOpen, data }: DirectionDataProps) => {
   useEffect(() => {
     setNomDirection(data?.nom_direction || '')
   }, [data?.nom_direction])
-
-  console.log(data)
 
   return (
     <Dialog open={open} onClose={handleClose} sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}>

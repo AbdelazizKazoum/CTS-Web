@@ -47,9 +47,12 @@ export const useDirectionStore = create<DirectionState>(set => ({
       set({ status: 'fulfilled' })
 
       toast.success('direction a été créée avec succès')
+
       return res.data
     } catch (error: any) {
       toast.error(error.data?.message ? error.data?.message : error.message)
+
+      return null
     }
   },
 
@@ -61,10 +64,12 @@ export const useDirectionStore = create<DirectionState>(set => ({
       set({ status: 'fulfilled' })
 
       toast.success('Direction a été modifier avec succès')
-      console.log('res edit :', res)
+
       return res.data
     } catch (error: any) {
       toast.error(error.data?.message ? error.data?.message : error.message)
+
+      return null
     }
   }
 }))

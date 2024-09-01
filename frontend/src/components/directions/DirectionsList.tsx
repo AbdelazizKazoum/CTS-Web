@@ -33,11 +33,9 @@ import tableStyles from '@core/styles/table.module.css'
 
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 
-import OptionMenu from '@/@core/components/option-menu'
 import CustomTextField from '@/@core/components/mui/TextField'
 
 import type { DirectionType } from '@/types/directionType'
-import OpenDialogOnElementClick from '../dialogs/OpenDialogOnElementClick'
 import EditDirectionDialog from '../dialogs/directions/EditDirectionDialog'
 
 type DirectionsTypeWithAction = DirectionType & {
@@ -294,7 +292,12 @@ export const DirectionsList = ({ tableData }: { tableData: DirectionType[] | nul
             table.setPageIndex(page)
           }}
         />
-        <EditDirectionDialog open={openDirectionModal} setOpen={setOpenDirectionModal} data={selectedDirection} />
+        <EditDirectionDialog
+          open={openDirectionModal}
+          setOpen={setOpenDirectionModal}
+          setData={setData}
+          data={selectedDirection}
+        />
       </Card>
     </div>
   )

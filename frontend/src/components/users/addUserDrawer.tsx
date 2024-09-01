@@ -90,8 +90,6 @@ const AddUserDrawer = ({
       res = null
     }
 
-    console.log('test user to update :', newUser)
-
     if (res.status || res.status !== 500) {
       setData((prev: UtilisateurType[]) =>
         prev.map((item: UtilisateurType) => {
