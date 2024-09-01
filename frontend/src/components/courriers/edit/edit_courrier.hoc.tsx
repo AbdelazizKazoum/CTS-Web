@@ -32,7 +32,6 @@ const editCourrier = (Component: React.ComponentType<any>) => {
 
     //On submit :
     async function onSubmit(data: any) {
-      console.log('helloworld :', selectedCourrier)
       if (file && selectedCourrier) {
         const formData = new FormData()
 

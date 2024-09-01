@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 'use client'
 
 // MUI Imports
@@ -83,6 +84,10 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
           <MenuItem href='/courriers/ajouter'> Ajouter</MenuItem>
           <MenuItem href='/courriers'>Liste</MenuItem>
         </SubMenu>
+
+        <MenuItem href='/directions' icon={<i className='tabler-info-circle' />}>
+          Directions
+        </MenuItem>
 
         <MenuItem href='/Parametres ' icon={<i className='tabler-smart-home' />}>
           Parametres{' '}

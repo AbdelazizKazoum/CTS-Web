@@ -13,6 +13,8 @@ export interface UtilisateurType {
   direction: DirectionType | null
 
   compte?: CompteType | null
+
+  file: File
 }
 
 export interface CompteType {

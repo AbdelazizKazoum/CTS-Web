@@ -24,7 +24,7 @@ interface CourrierStateType {
 
 export const useCourrierStore = create<CourrierStateType>(set => ({
   courriers: null,
-  status: 'idle',
+  status: 'Idle',
   loading: false,
   selectedCourrier: null,
   document: null,

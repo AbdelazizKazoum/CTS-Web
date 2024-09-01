@@ -39,7 +39,11 @@ export class DirectionService {
   }
 
   update(id: number, updateDirectionDto: UpdateDirectionDto) {
-    return `This action updates a #${id} direction`;
+    try {
+      return this.directionRepository.update(id, updateDirectionDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   remove(id: number) {

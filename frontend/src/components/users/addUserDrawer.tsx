@@ -75,7 +75,7 @@ const AddUserDrawer = ({
       matricule: data.matricule,
       cin: data.cin,
       direction: directions?.find((item: DirectionType) => item.id === data.direction) || null,
-      file: formData
+      file: files[0]
     }
 
     // setData([...(userData ?? []), newUser])

@@ -36,36 +36,30 @@ import TablePaginationComponent from '@/components/TablePaginationComponent'
 import OptionMenu from '@/@core/components/option-menu'
 import CustomTextField from '@/@core/components/mui/TextField'
 
-import TableFilters from './tableFilters'
+import type { DirectionType } from '@/types/directionType'
+import OpenDialogOnElementClick from '../dialogs/OpenDialogOnElementClick'
+import EditDirectionDialog from '../dialogs/directions/EditDirectionDialog'
 
-import type { CourrierType } from '@/types/courrierTypes'
-import { useCourrierStore } from '@/store/courrier.store'
-
-type CourriersTypeWithAction = CourrierType & {
+type DirectionsTypeWithAction = DirectionType & {
   action?: string
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<CourriersTypeWithAction>()
+const columnHelper = createColumnHelper<DirectionsTypeWithAction>()
 
-export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null }) => {
+export const DirectionsList = ({ tableData }: { tableData: DirectionType[] | null }) => {
   // States
-  // const [openCourrier, setAddUserOpen] = useState(false)
+  const [openDirectionModal, setOpenDirectionModal] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
 
   // const [filteredData, setFilteredData] = useState()
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const [data, setData] = useState<CourrierType[] | null>(...[tableData])
-  const [courrier, setCourrier] = useState<CourrierType | null>()
+  const [data, setData] = useState<DirectionType[] | null>(...[tableData])
 
-  //actions
-  const { setSelectedCourrier } = useCourrierStore()
+  const [selectedDirection, setSelectedDirection] = useState<DirectionType | null>()
 
-  // const [formMode, setFormMode] = useState('edit')
-
-  //
-  const router = useRouter()
+  // Vars
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
@@ -109,30 +103,8 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
     return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
   }
 
-  const columns = useMemo<ColumnDef<CourriersTypeWithAction, any>[]>(
+  const columns = useMemo<ColumnDef<DirectionsTypeWithAction, any>[]>(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
       columnHelper.accessor('id', {
         header: 'Id',
         cell: ({ row }) => (
@@ -145,98 +117,16 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
           </div>
         )
       }),
-      columnHelper.accessor('date_arrivee', {
-        header: 'Date arrivée',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.date_arrivee && new Date(row.original.date_arrivee).toLocaleDateString()}
-            </Typography>
-          </div>
-        )
-      }),
-      columnHelper.accessor('pre_reference', {
-        header: 'Pré Référence',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.pre_reference}
-            </Typography>
-          </div>
-        )
-      }),
-      columnHelper.accessor('date_pre_reference', {
-        header: 'Date Pré Référence',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.date_pre_reference && new Date(row.original.date_pre_reference).toLocaleDateString()}
-            </Typography>
-          </div>
-        )
-      }),
-      columnHelper.accessor('origine', {
-        header: 'Origine',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.origine}
-            </Typography>
-          </div>
-        )
-      }),
 
-      columnHelper.accessor('reference', {
-        header: 'Référence',
+      columnHelper.accessor('nom_direction', {
+        header: 'Nom direction',
         cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.reference}
-            </Typography>
-          </div>
-        )
-      }),
-
-      columnHelper.accessor('date_courrier', {
-        header: 'Date courrier',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.date_courrier && new Date(row.original?.date_courrier).toLocaleDateString()}
-            </Typography>
-          </div>
-        )
-      }),
-
-      columnHelper.accessor('objet', {
-        header: 'Objet',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.objet}
-            </Typography>
-          </div>
-        )
-      }),
-
-      columnHelper.accessor('classement', {
-        header: 'Classement',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.classement}
-            </Typography>
-          </div>
-        )
-      }),
-
-      columnHelper.accessor('date_traitement', {
-        header: 'Date Traitment',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.date_traitement && new Date(row.original?.date_traitement).toLocaleDateString()}
-            </Typography>
+          <div className='flex items-center gap-4'>
+            <div className='flex flex-col'>
+              <Typography color='text.primary' className='font-medium'>
+                {row.original.nom_direction}
+              </Typography>
+            </div>
           </div>
         )
       }),
@@ -248,44 +138,16 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
             <IconButton>
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
-            <IconButton>
-              <Link href={`/courrier/view/${row.original.id}`}>
-                <i
-                  onClick={() => {
-                    // setFormMode('view')
-                    // setUser(row.original)
-                    // setAddUserOpen(!addUserOpen)
-                  }}
-                  className='tabler-eye text-textSecondary'
-                />
-              </Link>
-            </IconButton>
-            <OptionMenu
-              iconButtonProps={{ size: 'medium' }}
-              iconClassName='text-textSecondary'
-              options={[
-                {
-                  text: 'Download',
-                  icon: 'tabler-download',
-                  menuItemProps: {
-                    className: 'flex items-center gap-2 text-textSecondary'
-                  }
-                },
-                {
-                  text: 'Modifier',
-                  icon: 'tabler-edit',
-                  menuItemProps: {
-                    className: 'flex items-center gap-2 text-textSecondary',
-                    onClick: () => {
-                      setSelectedCourrier(row.original)
-                      router.push('/courriers/modifier')
 
-                      // setAddUserOpen(!addUserOpen)
-                    }
-                  }
-                }
-              ]}
-            />
+            <IconButton>
+              <i
+                onClick={() => {
+                  setSelectedDirection(row.original)
+                  setOpenDirectionModal(!openDirectionModal)
+                }}
+                className='tabler-edit text-textSecondary'
+              />
+            </IconButton>
           </div>
         ),
         enableSorting: false
@@ -296,7 +158,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
   )
 
   const table = useReactTable({
-    data: data as CourrierType[],
+    data: data as DirectionType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -324,13 +186,10 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  console.log('courriers', courrier)
-
   return (
     <div>
       <Card>
         <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setData} tableData={tableData} />
         <div className='flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4'>
           <CustomTextField
             select
@@ -361,16 +220,16 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
               variant='contained'
               startIcon={<i className='tabler-plus' />}
               onClick={() => {
-                setCourrier(null)
-                router.push('/courriers/ajouter')
+                setSelectedDirection(null)
+                setOpenDirectionModal(!openDirectionModal)
               }}
               className='is-full sm:is-auto'
             >
-              Ajouter un nouveau courrier
+              Ajouter un nouveau Direction
             </Button>
           </div>
         </div>
-        <div className='overflow-x-auto'>
+        <div className='overflow-x-auto '>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -435,6 +294,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
             table.setPageIndex(page)
           }}
         />
+        <EditDirectionDialog open={openDirectionModal} setOpen={setOpenDirectionModal} data={selectedDirection} />
       </Card>
     </div>
   )

@@ -1,4 +1,4 @@
 export interface DirectionType {
-  id: number
+  id?: number
   nom_direction: string
 }
