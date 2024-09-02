@@ -89,7 +89,7 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       console.log('user updated :', data)
 
       set({ loading: false })
-      toast.success('User updated successfully')
+      toast.success("L'utilisareur a été modifier avec succès")
 
       return data
     } catch (error: any) {

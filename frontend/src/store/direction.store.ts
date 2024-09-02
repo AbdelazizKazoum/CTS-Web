@@ -1,10 +1,11 @@
 /* eslint-disable import/no-unresolved */
 import { create } from 'zustand'
 
+import { toast } from 'react-toastify'
+
 import type { DirectionType } from '@/types/directionType'
 
 import api from '@/lib/api'
-import { toast } from 'react-toastify'
 
 interface DirectionState {
   directions: DirectionType[] | null

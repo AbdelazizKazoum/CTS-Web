@@ -4,6 +4,7 @@ import { UpdateCompteDto } from './dto/update-compte.dto';
 import { Compte } from 'src/entities/compte.entity';
 import { Repository } from 'typeorm';
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -57,30 +58,36 @@ export class CompteService {
         id: updateCompteDto.id,
       });
 
-      if (!getCompte) throw new NotFoundException('Compte not exists !');
+      if (!getCompte) throw new NotFoundException("Compte n'existe pas !");
 
       if (updateCompteDto.pass) {
         const hashPass = await bcrypt.hash(updateCompteDto.pass, salt);
 
         return await this.compteRepository.update(id, {
-          ...getCompte,
+          ...updateCompteDto,
           pass: hashPass,
         });
       }
 
       if (updateCompteDto.profile) {
         return await this.compteRepository.update(id, {
-          ...getCompte,
+          ...updateCompteDto,
           profile: updateCompteDto.profile,
         });
       }
+
+      throw new BadRequestException(
+        'Veuillez fournir des données pour la modification.',
+      );
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
   }
 
   async findAll() {
-    return await this.compteRepository.find();
+    return await this.compteRepository.find({
+      relations: ['utilisateur', 'profile'],
+    });
   }
 
   findOne(id: number) {

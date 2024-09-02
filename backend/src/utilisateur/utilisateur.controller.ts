@@ -29,19 +29,19 @@ export class UtilisateurController {
   constructor(private readonly utilisateurService: UtilisateurService) {}
 
   @Get()
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.secretariat)
   async getAll(@Req() request: Request): Promise<Utilisateur[]> {
     return await this.utilisateurService.findAll();
   }
 
   @Get('/:id')
-  @Roles(Role.Admin, Role.utilisateur)
+  @Roles(Role.Admin, Role.secretariat)
   async getUser(@Param('id') id: number): Promise<Utilisateur> {
     return await this.utilisateurService.findOne(id);
   }
 
   @Get('/cin/:cin')
-  @Roles(Role.Admin, Role.utilisateur)
+  @Roles(Role.Admin, Role.secretariat)
   async getByCin(@Param('cin') cin: string): Promise<Utilisateur> {
     return await this.utilisateurService.findOneByCin(cin);
   }

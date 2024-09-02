@@ -16,11 +16,47 @@ import Button from '@mui/material/Button'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
+import { CompteType, ProfileType } from '@/types/userTypes'
+import { FormHelperText } from '@mui/material'
 
-const ChangePassword = () => {
+const ChangePassword = ({
+  compte,
+  updateCompte,
+  profiles
+}: {
+  compte: CompteType
+
+  profiles: ProfileType[]
+  updateCompte: (comteData: CompteType) => Promise<any>
+  loading: boolean
+}) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false)
+  const [pass, setPass] = useState('')
+  const [sending, setSending] = useState<boolean>(false)
+
+  const [confirmPass, setConfirmPass] = useState('')
+  const [error, setError] = useState(null)
+  const [isMatch, setIsMatch] = useState(true)
+
+  async function updatePass() {
+    if (compte && pass) {
+      if (confirmPass === pass) {
+        setSending(true)
+        const res = await updateCompte({ ...compte, pass })
+
+        if (res) {
+          console.log('sucess')
+        }
+
+        setSending(false)
+      } else {
+        setError('password not match')
+        setIsMatch(false)
+      }
+    }
+  }
 
   return (
     <>
@@ -36,7 +72,10 @@ const ChangePassword = () => {
               <CustomTextField
                 fullWidth
                 label='Password'
+                error={!isMatch}
                 type={isPasswordShown ? 'text' : 'password'}
+                value={pass}
+                onChange={e => setPass(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -51,12 +90,26 @@ const ChangePassword = () => {
                   )
                 }}
               />
+              {error && (
+                <FormHelperText className='mt-4' error>
+                  Password Not match
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Confirm Password'
                 type={isConfirmPasswordShown ? 'text' : 'password'}
+                value={confirmPass}
+                error={!isMatch}
+                onChange={e => {
+                  if (pass === confirmPass && error != null) {
+                    setIsMatch(true)
+                  }
+
+                  setConfirmPass(e.target.value)
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -74,7 +127,9 @@ const ChangePassword = () => {
             </Grid>
 
             <Grid item xs={12} className='flex gap-4'>
-              <Button variant='contained'>Change Password</Button>
+              <Button onClick={updatePass} variant='contained'>
+                Change Password
+              </Button>
             </Grid>
           </Grid>
         </form>

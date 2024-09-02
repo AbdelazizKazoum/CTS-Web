@@ -20,7 +20,8 @@ export interface UtilisateurType {
 export interface CompteType {
   id?: number
   pseudo: string
-  profile: ProfileType
+  pass?: string
+  profile: ProfileType | null
   utilisateur?: UtilisateurType
 }
 
