@@ -24,7 +24,31 @@ export class CourrierService {
 
   async findAll() {
     return await this.courrierRepository.find({
-      relations: ['utilisateur', 'modifier_par'],
+      relations: [
+        'utilisateur',
+        'utilisateur.direction',
+        'utilisateur.compte.profile',
+        'modifier_par',
+      ],
+    });
+  }
+  async findByUserRole(role: string) {
+    return await this.courrierRepository.find({
+      relations: [
+        'utilisateur',
+        'utilisateur.direction',
+        'utilisateur.compte.profile',
+        'modifier_par',
+      ],
+      where: {
+        utilisateur: {
+          compte: {
+            profile: {
+              libeleFunction: role,
+            },
+          },
+        },
+      },
     });
   }
 

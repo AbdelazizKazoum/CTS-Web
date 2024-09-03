@@ -110,8 +110,15 @@ export class CourrierController {
   }
 
   @Get()
-  findAll() {
-    return this.courrierService.findAll();
+  findAll(@Req() req) {
+    const userRole = req.user?.role;
+    if (!userRole) throw new InternalServerErrorException('Unothorized user!');
+    console.log('🚀 ~ CourrierController ~ findAll ~ user:', userRole);
+    if (userRole === 'Administrateur') {
+      return this.courrierService.findAll();
+    } else {
+      return this.courrierService.findByUserRole(userRole);
+    }
   }
 
   @Get(':id')

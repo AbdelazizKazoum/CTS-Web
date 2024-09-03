@@ -37,12 +37,13 @@ const ChangePassword = ({
   const [sending, setSending] = useState<boolean>(false)
 
   const [confirmPass, setConfirmPass] = useState('')
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [isMatch, setIsMatch] = useState(true)
 
   async function updatePass() {
     if (compte && pass) {
       if (confirmPass === pass) {
+        setIsMatch(true)
         setSending(true)
         const res = await updateCompte({ ...compte, pass })
 
@@ -104,8 +105,9 @@ const ChangePassword = ({
                 value={confirmPass}
                 error={!isMatch}
                 onChange={e => {
-                  if (pass === confirmPass && error != null) {
+                  if (e.target.value === pass && error != null) {
                     setIsMatch(true)
+                    setError(null)
                   }
 
                   setConfirmPass(e.target.value)
