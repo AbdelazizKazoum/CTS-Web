@@ -46,6 +46,13 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
   const { settings } = useSettings()
   const { isBreakpointReached } = useVerticalNav()
 
+  //Get user data
+  const userData = JSON.parse(localStorage.getItem('userData') || '')
+
+  const role = userData.role
+
+  console.log('🚀 ~ VerticalMenu ~ userData:', role)
+
   // Vars
   const { transitionDuration } = verticalNavOptions
 
@@ -74,24 +81,33 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
-          Home
-        </MenuItem>
-        <MenuItem href='/utilisateurs' icon={<i className='tabler-info-circle' />}>
-          utilisateurs
-        </MenuItem>
+        {(role === 'Administrateur' || role === 'Secretariat') && (
+          <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
+            Home
+          </MenuItem>
+        )}
+        {role === 'Administrateur' && (
+          <MenuItem href='/utilisateurs' icon={<i className='tabler-info-circle' />}>
+            utilisateurs
+          </MenuItem>
+        )}
+
         <SubMenu label='Courriers' icon={<i className='tabler-smart-home' />}>
           <MenuItem href='/courriers/ajouter'> Ajouter</MenuItem>
           <MenuItem href='/courriers'>Liste</MenuItem>
         </SubMenu>
 
-        <MenuItem href='/directions' icon={<i className='tabler-info-circle' />}>
-          Directions
-        </MenuItem>
+        {role === 'Administrateur' && (
+          <>
+            <MenuItem href='/directions' icon={<i className='tabler-info-circle' />}>
+              Directions
+            </MenuItem>
 
-        <MenuItem href='/Parametres ' icon={<i className='tabler-smart-home' />}>
-          Parametres{' '}
-        </MenuItem>
+            <MenuItem href='/Parametres ' icon={<i className='tabler-smart-home' />}>
+              Parametres{' '}
+            </MenuItem>
+          </>
+        )}
       </Menu>
       {/* <Menu
         popoutMenuOffset={{ mainAxis: 23 }}

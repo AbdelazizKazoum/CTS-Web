@@ -29,7 +29,7 @@ export class UtilisateurController {
   constructor(private readonly utilisateurService: UtilisateurService) {}
 
   @Get()
-  @Roles(Role.Admin, Role.secretariat)
+  @Roles(Role.Admin)
   async getAll(@Req() request: Request): Promise<Utilisateur[]> {
     return await this.utilisateurService.findAll();
   }

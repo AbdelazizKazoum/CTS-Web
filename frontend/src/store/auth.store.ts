@@ -37,7 +37,13 @@ export const UseAuthStore = create<authStoreState>(set => ({
         console.log(authData)
 
         localStorage.setItem('token', authData.token)
-        localStorage.setItem('userData', authData.payload)
+        localStorage.setItem(
+          'userData',
+          JSON.stringify({
+            fullname: `${authData?.payload?.nom} ${authData?.payload?.prenom}`,
+            role: authData?.payload?.role
+          })
+        )
         handleSession(authData.token)
 
         console.log('hello world')
