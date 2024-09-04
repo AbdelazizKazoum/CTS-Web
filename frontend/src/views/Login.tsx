@@ -1,8 +1,9 @@
+/* eslint-disable import/named */
 /* eslint-disable import/no-unresolved */
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -10,7 +11,6 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -19,26 +19,17 @@ import IconButton from '@mui/material/IconButton'
 // Components Imports
 import CustomTextField from '@core/components/mui/TextField'
 
-import Logo from '@/components/layout/shared/Logo'
 import { FormHelperText } from '@mui/material'
+
+import Logo from '@/components/layout/shared/Logo'
+import { authenticate } from '@/lib/actions'
 
 const FormLayoutsAlignment = () => {
   // States
+  const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined)
+
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
-  const [cni, setCni] = useState('')
-  const [pass, setPass] = useState('')
-  const [error, setError] = useState('')
-
-  const onsubmit = async () => {
-    if (cni && pass) {
-      console.log(cni, pass)
-    } else {
-      setError('Veuillez entrer votre CNI et votre mot de passe.')
-    }
-  }
 
   return (
     <Card className=''>
@@ -46,19 +37,13 @@ const FormLayoutsAlignment = () => {
         <Logo />
       </div>{' '}
       <CardContent style={{ height: '100vh' }} className='flex flex-col items-center justify-center bs-[500px]'>
-        <form onSubmit={e => e.preventDefault()} className='p-12 max-is-[400px] border rounded'>
+        <form action={formAction} className='p-12 max-is-[400px] border rounded'>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <Typography variant='h5'>S&apos;inscrire</Typography>
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField
-                value={cni}
-                onChange={e => setCni(e.target.value)}
-                fullWidth
-                label='CNI'
-                placeholder=' '
-              />
+              <CustomTextField fullWidth label='CNI' placeholder=' ' />
             </Grid>
             <Grid item xs={12}>
               <CustomTextField
@@ -67,8 +52,6 @@ const FormLayoutsAlignment = () => {
                 placeholder='············'
                 id='form-layout-alignment-password'
                 type={isPasswordShown ? 'text' : 'password'}
-                value={pass}
-                onChange={e => setPass(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -84,9 +67,9 @@ const FormLayoutsAlignment = () => {
                   )
                 }}
               />
-              {error && (
+              {errorMessage && (
                 <FormHelperText className='mt-4' error>
-                  {error}
+                  {errorMessage}
                 </FormHelperText>
               )}
             </Grid>
@@ -94,7 +77,7 @@ const FormLayoutsAlignment = () => {
               <FormControlLabel control={<Checkbox />} label="Ne m'oublie pas" />
             </Grid>
             <Grid item xs={12} className='pbs-2'>
-              <Button onClick={onsubmit} variant='contained' type='submit' fullWidth>
+              <Button variant='contained' type='submit' aria-disabled={isPending} fullWidth>
                 Se connecter
               </Button>
             </Grid>
