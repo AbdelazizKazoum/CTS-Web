@@ -1,14 +1,14 @@
-'use server'
-
 import { AuthError } from 'next-auth'
 
-import { signIn } from '../../auth'
+import { signIn } from '../auth'
 
 // ...
 
-export async function authenticate(prevState: string | undefined, formData: FormData) {
+export async function authenticate(formData: FormData) {
   try {
-    await signIn('credentials', formData)
+    const res = await signIn('credentials', formData)
+
+    return res
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

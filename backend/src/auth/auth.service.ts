@@ -3,6 +3,7 @@ import { CompteService } from './../compte/compte.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignInDto } from './dto/signin.dto';
 import { UtilisateurService } from 'src/utilisateur/utilisateur.service';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -29,6 +30,14 @@ export class AuthService {
       role: compte.profile.libeleFunction,
     };
 
-    return { payload, token: await this.jwtService.signAsync(payload) };
+    return {
+      payload,
+      token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
+      refreshToken: await this.jwtService.signAsync(payload, {
+        secret: jwtConstants.secret,
+        expiresIn: '30d',
+      }),
+    };
   }
 }

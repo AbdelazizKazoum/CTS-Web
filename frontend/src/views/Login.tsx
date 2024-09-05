@@ -3,7 +3,7 @@
 'use client'
 
 // React Imports
-import { useActionState, useState } from 'react'
+import { FormEvent, useActionState, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -25,11 +25,17 @@ import Logo from '@/components/layout/shared/Logo'
 import { authenticate } from '@/lib/actions'
 
 const FormLayoutsAlignment = () => {
-  // States
-  const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined)
-
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
+  async function handleFormSubmit(e: FormEvent) {
+    e.preventDefault()
+
+    try {
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
 
   return (
     <Card className=''>
@@ -37,7 +43,7 @@ const FormLayoutsAlignment = () => {
         <Logo />
       </div>{' '}
       <CardContent style={{ height: '100vh' }} className='flex flex-col items-center justify-center bs-[500px]'>
-        <form action={formAction} className='p-12 max-is-[400px] border rounded'>
+        <form className='p-12 max-is-[400px] border rounded'>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <Typography variant='h5'>S&apos;inscrire</Typography>
