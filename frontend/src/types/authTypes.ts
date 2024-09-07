@@ -1,6 +1,6 @@
 export interface AuthType {
-  userData: {
-    id?: number | string
+  user: {
+    id?: number | string | undefined
     nom: string
     prenom: string
     cin?: string

@@ -1,5 +1,4 @@
 /* eslint-disable import/no-unresolved */
-'use client'
 
 import type { AxiosRequestHeaders } from 'axios'
 import axios from 'axios'
@@ -14,7 +13,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token')
+    const token = 'hello'
 
     config.headers = {
       Authorization: `Bearer ${token}`,
