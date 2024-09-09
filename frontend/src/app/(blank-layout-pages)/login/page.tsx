@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 // Next Imports
 import type { Metadata } from 'next'
 
@@ -5,7 +6,6 @@ import type { Metadata } from 'next'
 import Login from '@views/Login'
 
 // Server Action Imports
-import { getServerMode } from '@core/utils/serverHelpers'
 
 export const metadata: Metadata = {
   title: 'Login',
@@ -13,10 +13,7 @@ export const metadata: Metadata = {
 }
 
 const LoginPage = () => {
-  // Vars
-  const mode = getServerMode()
-
-  return <Login mode={mode} />
+  return <Login />
 }
 
 export default LoginPage

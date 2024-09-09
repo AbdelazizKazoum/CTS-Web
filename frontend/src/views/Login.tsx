@@ -29,10 +29,6 @@ import { signIn } from 'next-auth/react'
 
 import Logo from '@/components/layout/shared/Logo'
 
-type ErrorType = {
-  message: string[]
-}
-
 const FormLayoutsAlignment = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
