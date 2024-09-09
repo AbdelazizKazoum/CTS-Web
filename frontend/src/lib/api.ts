@@ -6,9 +6,6 @@ import axios from 'axios'
 import { getSession } from 'next-auth/react'
 
 import { BACKEND_API_URL } from '@/utils/constants'
-import { auth } from './auth'
-
-console.log('call this api : ', BACKEND_API_URL)
 
 const api = axios.create({
   baseURL: BACKEND_API_URL
@@ -16,7 +13,13 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async config => {
-    const session = await getSession()
+    let session = null
+
+    try {
+      session = (await getSession()) || null
+    } catch (error) {
+      session = null
+    }
 
     console.log('test the session from the api call : ', session)
 

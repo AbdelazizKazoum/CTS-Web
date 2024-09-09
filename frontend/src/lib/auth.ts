@@ -56,6 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           return null
         } catch (e: any) {
+          console.log(e)
           throw new Error(e.message)
         }
       }

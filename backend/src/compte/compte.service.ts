@@ -97,6 +97,7 @@ export class CompteService {
     return this.compteRepository.findOne({
       where: { utilisateur: user },
       relations: ['profile'],
+      select: ['id', 'profile', 'pseudo', 'pass'],
     });
   }
 

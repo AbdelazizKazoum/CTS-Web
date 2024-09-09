@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignInDto } from './dto/signin.dto';
 import { UtilisateurService } from 'src/utilisateur/utilisateur.service';
 import { jwtConstants } from './constants';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,10 @@ export class AuthService {
     const compte = await this.compteService.findByUser(user);
 
     if (!compte) throw new UnauthorizedException("User doesn't have account! ");
+
+    const isMatch = await bcrypt.compare(signInDto.password, compte.pass);
+
+    if (!isMatch) throw new UnauthorizedException('Invalid Credentials!');
 
     const payload = {
       ...user,

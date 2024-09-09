@@ -22,6 +22,7 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 import { useSettings } from '@core/hooks/useSettings'
+import Image from 'next/image'
 
 type LogoTextProps = {
   isHovered?: VerticalNavContextProps['isHovered']
@@ -72,7 +73,10 @@ const Logo = () => {
   // return <Img src='/next.svg' width={100} height={25} alt='logo' /> // for example
   return (
     <Link href='/' className='flex items-center'>
-      <VuexyLogo className='text-2xl text-primary' />
+      {/* <VuexyLogo className='text-2xl text-primary' /> */}
+
+      <Image alt='logo' src='/images/cts_web_logo.png' width={40} height={40} />
+
       <LogoText
         ref={logoTextRef}
         isHovered={isHovered}
