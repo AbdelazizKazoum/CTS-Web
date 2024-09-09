@@ -52,7 +52,7 @@ export class CourrierController {
             .join('');
           callback(
             null,
-            `${name.split(' ').join('_')}${randomName}${fileExtName}`,
+            `${name.split(' ').join('_')}-${randomName}${fileExtName}`,
           );
         },
       }),
@@ -142,7 +142,7 @@ export class CourrierController {
             .join('');
           callback(
             null,
-            `${name.split(' ').join('_')}${randomName}${fileExtName}`,
+            `${name.split(' ').join('_')}-${randomName}${fileExtName}`,
           );
         },
       }),

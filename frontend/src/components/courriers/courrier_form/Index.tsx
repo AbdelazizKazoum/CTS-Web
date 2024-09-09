@@ -18,7 +18,8 @@ const Index = ({
   file,
   setFile,
   loading,
-  courrierData
+  courrierData,
+  mode
 }: {
   onSubmit: () => void
   buttonText: string
@@ -28,11 +29,13 @@ const Index = ({
   loading: boolean
   courrierData: CourrierType
   courrierFile: string
+  mode?: string
 }) => {
   const formRef = useRef<HTMLFormElement>(null)
 
   const {
     handleSubmit,
+
     control,
     formState: { errors }
   } = useForm<CourrierType>({
@@ -59,7 +62,15 @@ const Index = ({
       <Grid item xs={12}>
         <CourrierHeader buttonText={buttonText} title={title} loading={loading} submitFormClick={submitFormClick} />
       </Grid>
-      <Grid item xs={12} md={6}>
+
+      <Grid item xs={12} md={12}>
+        <Grid container>
+          <Grid item xs={12}>
+            <CourrierUploads mode={mode} file={file} setFile={setFile} />
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} md={12}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <CourrierInformation
@@ -68,16 +79,10 @@ const Index = ({
               handleSubmit={handleSubmit}
               control={control}
               errors={errors}
+              readOnly={mode === 'view'}
             />
           </Grid>
           {/* <Grid item xs={12}></Grid> */}
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Grid container>
-          <Grid item xs={12}>
-            <CourrierUploads file={file} setFile={setFile} />
-          </Grid>
         </Grid>
       </Grid>
     </Grid>

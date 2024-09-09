@@ -33,19 +33,21 @@ const CourrierInformation = ({
   control,
   errors,
   onSubmit,
-  formRef
+  formRef,
+  readOnly
 }: {
   handleSubmit: UseFormHandleSubmit<CourrierType, undefined>
   control: Control<CourrierType, any>
   errors: FieldErrors<CourrierType>
   onSubmit: (data: any) => void
   formRef: React.RefObject<HTMLFormElement>
+  readOnly?: boolean
 }) => {
   return (
     <Card>
       <CardHeader title='Informations du courrier' />
       <CardContent>
-        <form ref={formRef} action='' onSubmit={handleSubmit(onSubmit)}>
+        <form ref={formRef} action='' onSubmit={handleSubmit(onSubmit)} className={`${readOnly ? 'read-only' : ''} `}>
           <Grid container spacing={6} className='mbe-6'>
             <Grid item xs={12}>
               <Controller
@@ -199,6 +201,7 @@ const CourrierInformation = ({
                   return (
                     <CustomTextField
                       {...field}
+                      aria-readonly={readOnly}
                       fullWidth
                       label='Classement'
                       placeholder=''
@@ -218,6 +221,7 @@ const CourrierInformation = ({
                     <AppReactDatepicker
                       selected={value}
                       showYearDropdown
+                      aria-readonly={readOnly}
                       showMonthDropdown
                       onChange={onChange}
                       placeholderText='MM/DD/YYYY'

@@ -249,16 +249,13 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
               <i className='tabler-trash text-textSecondary' />
             </IconButton>
             <IconButton>
-              <Link href={`/courrier/view/${row.original.id}`}>
-                <i
-                  onClick={() => {
-                    // setFormMode('view')
-                    // setUser(row.original)
-                    // setAddUserOpen(!addUserOpen)
-                  }}
-                  className='tabler-eye text-textSecondary'
-                />
-              </Link>
+              <i
+                onClick={() => {
+                  setSelectedCourrier(row.original)
+                  router.push('/courriers/consulter')
+                }}
+                className='tabler-eye text-textSecondary'
+              />
             </IconButton>
             <OptionMenu
               iconButtonProps={{ size: 'medium' }}

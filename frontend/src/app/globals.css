@@ -124,3 +124,10 @@ code {
   background-color: rgb(var(--mui-palette-info-mainChannel) / 0.08);
   border: 0;
 }
+
+/* .read-only .MuiFormControl-root {
+  pointer-events: none !important ;
+} */
+.read-only input {
+  background-color: #f0f0f0; /* Optional styling */
+}

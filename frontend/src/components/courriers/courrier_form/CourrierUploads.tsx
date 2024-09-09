@@ -47,10 +47,12 @@ const Dropzone = styled(AppReactDropzone)<BoxProps>(({ theme }) => ({
 
 const CourrierUploads = ({
   file,
-  setFile
+  setFile,
+  mode
 }: {
   file?: File | null
   setFile: Dispatch<SetStateAction<File | null | undefined>>
+  mode?: string
 }) => {
   // Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -71,13 +73,21 @@ const CourrierUploads = ({
     setFile(null)
   }
 
+  const openDocument = (file: File) => {
+    const URL = window.URL.createObjectURL(file)
+
+    window.open(URL, '_blank')
+  }
+
   const fileList = (file: File) => (
     <ListItem key={file.name} className='pis-4 plb-3'>
       <div className='file-details'>
         <div className='file-preview'>{renderFilePreview(file)}</div>
         <div>
           <Typography className='file-name font-medium' color='text.primary'>
-            {file.name}
+            <i className=' text-blue-400 cursor-pointer ' onClick={() => openDocument(file)}>
+              {file.name}
+            </i>
           </Typography>
           <Typography className='file-size' variant='body2'>
             {Math.round(file.size / 100) / 10 > 1000
@@ -86,9 +96,18 @@ const CourrierUploads = ({
           </Typography>
         </div>
       </div>
-      <IconButton onClick={() => handleRemoveFile()}>
-        <i className='tabler-x text-xl' />
-      </IconButton>
+      <div className='flex gap-2'>
+        <IconButton onClick={() => openDocument(file)}>
+          <i className='tabler-eye ' />
+        </IconButton>
+        {mode === 'view' ? (
+          ''
+        ) : (
+          <IconButton onClick={() => handleRemoveFile()}>
+            <i className='tabler-x text-red-500 ' />
+          </IconButton>
+        )}
+      </div>
     </ListItem>
   )
 
@@ -97,7 +116,7 @@ const CourrierUploads = ({
       <Card>
         <CardHeader title='Courrier' sx={{ '& .MuiCardHeader-action': { alignSelf: 'center' } }} />
         <CardContent>
-          <div {...getRootProps({ className: 'dropzone' })}>
+          <div {...getRootProps({ className: `dropzone  ${mode ? (mode === 'view' ? 'hidden' : '') : ''}   ` })}>
             <input {...getInputProps()} />
             <div className='flex items-center flex-col gap-2 text-center'>
               <CustomAvatar variant='rounded' skin='light' color='secondary'>

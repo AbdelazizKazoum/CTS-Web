@@ -144,7 +144,7 @@ const TableFilters = ({
             </MenuItem>
             {users?.map((item: UtilisateurType) => (
               <MenuItem key={item.id} value={item.cin}>
-                {` ${item.nom} ${item.prenom}   ${item.compte?.pseudo && ` (${item.compte?.pseudo || ''}) `}  `}
+                {` ${item.nom} ${item.prenom}   ${item.compte?.pseudo != null ? ` (${item.compte?.pseudo || ''})  ` : ''}  `}
               </MenuItem>
             ))}
           </CustomTextField>
