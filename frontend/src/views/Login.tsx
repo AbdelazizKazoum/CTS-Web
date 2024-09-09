@@ -3,9 +3,13 @@
 'use client'
 
 // React Imports
-import { FormEvent, useActionState, useState } from 'react'
+import type { FormEvent } from 'react'
+
+import { useState } from 'react'
 
 // MUI Imports
+import { useRouter, useSearchParams } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -21,38 +25,47 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import { FormHelperText } from '@mui/material'
 
+import { signIn } from 'next-auth/react'
+
 import Logo from '@/components/layout/shared/Logo'
 
-import { signIn, useSession } from 'next-auth/react'
+type ErrorType = {
+  message: string[]
+}
 
 const FormLayoutsAlignment = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-  const [errorMessage, setErrorMessage] = useState('')
-
-  const [isPending, setIsPending] = useState('')
+  const [errorState, setErrorState] = useState<string | null>(null)
 
   const [cin, setCin] = useState('')
   const [password, setPassord] = useState('')
 
-  const session = useSession()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault()
+
     const res = await signIn('credentials', {
       cin,
-      password
+      password,
+      redirect: false
     })
 
-    console.log('login attempt :', res)
+    if (res && res.ok && res.error === null) {
+      // Vars
+      const redirectURL = searchParams.get('redirectTo') ?? '/'
 
-    try {
-    } catch (error: any) {
-      console.error(error)
+      console.log(res)
+
+      router.replace(redirectURL)
+    } else {
+      if (res?.error) {
+        setErrorState("Nom d'utilisateur ou mot de passe incorrect. Veuillez réessayer.")
+      }
     }
   }
-
-  console.log('session :', session)
 
   return (
     <Card className=''>
@@ -100,9 +113,9 @@ const FormLayoutsAlignment = () => {
                   )
                 }}
               />
-              {errorMessage && (
+              {errorState && (
                 <FormHelperText className='mt-4' error>
-                  {errorMessage}
+                  {errorState}
                 </FormHelperText>
               )}
             </Grid>

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 // Type Imports
 import type { ChildrenType } from '@core/types'
 
@@ -8,6 +9,8 @@ import BlankLayout from '@layouts/BlankLayout'
 // Util Imports
 import { getSystemMode } from '@core/utils/serverHelpers'
 
+import GuestOnlyRoute from '@/hocs/GuestOnlyRoute'
+
 type Props = ChildrenType
 
 const Layout = ({ children }: Props) => {
@@ -17,7 +20,9 @@ const Layout = ({ children }: Props) => {
 
   return (
     <Providers direction={direction}>
-      <BlankLayout systemMode={systemMode}>{children}</BlankLayout>
+      <GuestOnlyRoute>
+        <BlankLayout systemMode={systemMode}>{children}</BlankLayout>
+      </GuestOnlyRoute>
     </Providers>
   )
 }

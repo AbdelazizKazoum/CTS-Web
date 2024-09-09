@@ -4,6 +4,7 @@ import type { AxiosRequestHeaders } from 'axios'
 import axios from 'axios'
 
 import { BACKEND_API_URL } from '@/utils/constants'
+import { auth } from './auth'
 
 console.log('call this api : ', BACKEND_API_URL)
 
@@ -12,8 +13,11 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(
-  config => {
-    const token = 'hello'
+  async config => {
+    const session = await auth()
+    // console.log('session in the api config :', session)
+
+    const token = session?.accessToken || ''
 
     config.headers = {
       Authorization: `Bearer ${token}`,

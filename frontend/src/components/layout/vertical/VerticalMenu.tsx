@@ -23,6 +23,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import { useSession } from 'next-auth/react'
 
 type RenderExpandIconProps = {
   open?: boolean
@@ -45,11 +46,9 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
   const verticalNavOptions = useVerticalNav()
   const { settings } = useSettings()
   const { isBreakpointReached } = useVerticalNav()
+  const session = useSession()
 
-  //Get user data
-  const userData = JSON.parse(localStorage.getItem('userData') || '')
-
-  const role = userData.role
+  const role = session.data?.user?.role || null
 
   console.log('🚀 ~ VerticalMenu ~ userData:', role)
 

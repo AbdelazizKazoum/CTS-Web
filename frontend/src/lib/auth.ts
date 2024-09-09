@@ -34,16 +34,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          */
         const { cin, password } = credentials as { cin: string; password: string }
 
-        console.log('hello cin ', cin)
-
         try {
           // ** Login API Call to match the user credentials and receive user data in response along with his role
           const res = await api.post('/auth/login', { password, cin })
 
+          console.log('res :', res)
           const data = await res.data
 
           if (res.status === 401) {
-            throw new Error('authentication failed!')
+            throw new Error("échec de l'authentification !")
           }
 
           if (res.status === 201) {
@@ -56,8 +55,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           return null
-        } catch (error: any) {
-          throw new Error(error)
+        } catch (e: any) {
+          throw new Error(e.message)
         }
       }
     })
@@ -106,8 +105,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.refreshToken = user.refreshToken
       }
 
-      console.log('token :', token)
-
       return token
     },
     async session({ session, token }: { session: Session; token: JWT }) {
@@ -120,9 +117,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           direction: token.user?.direction || '',
           role: token.user.role
         }
-      }
 
-      console.log('session :', session)
+        session.accessToken = token.accessToken || ''
+      }
 
       return session
     }

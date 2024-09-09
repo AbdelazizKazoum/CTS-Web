@@ -18,6 +18,8 @@ declare module 'next-auth' {
 
       role: string
     } & DefaultSession['user']
+
+    accessToken: string
   }
 
   type User = AuthType

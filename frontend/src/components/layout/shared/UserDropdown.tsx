@@ -23,6 +23,7 @@ import Button from '@mui/material/Button'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+import { signOut } from 'next-auth/react'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -63,8 +64,15 @@ const UserDropdown = () => {
   }
 
   const handleUserLogout = async () => {
-    // Redirect to login page
-    router.push('/login')
+    try {
+      // Sign out from the app
+      await signOut({ callbackUrl: process.env.NEXT_PUBLIC_APP_URL })
+    } catch (error) {
+      console.error(error)
+
+      // Show above error in a toast like following
+      // toastService.error((err as Error).message)
+    }
   }
 
   return (

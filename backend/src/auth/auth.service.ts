@@ -17,7 +17,7 @@ export class AuthService {
     const user = await this.utilisateurService.findOneByCin(signInDto.cin);
 
     if (!user) {
-      return new UnauthorizedException('login failed !');
+      throw new UnauthorizedException('login failed !');
     }
 
     const compte = await this.compteService.findByUser(user);
