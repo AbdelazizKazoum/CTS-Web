@@ -126,7 +126,7 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
       // GENERATE FILES :
       const blob = new Blob([res.data])
 
-      const file = new File([blob], filePath.split('-')[0], {
+      const file = new File([blob], filePath.split('-')[0] + '.pdf', {
         type: 'application/pdf',
         lastModified: 1723730753678 // Set the desired lastModified timestamp
       })
