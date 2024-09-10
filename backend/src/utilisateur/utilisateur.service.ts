@@ -11,12 +11,16 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { clearParserCache } from 'mysql2';
+import { Courrier } from 'src/entities/courrier.entity';
 
 @Injectable()
 export class UtilisateurService {
   constructor(
     @InjectRepository(Utilisateur)
     private utilisateurRepository: Repository<Utilisateur>,
+
+    @InjectRepository(Courrier)
+    private courrierRepository: Repository<Courrier>,
   ) {}
 
   async checkUser(cin): Promise<any> {
@@ -75,11 +79,29 @@ export class UtilisateurService {
     }
   }
 
-  async findOne(id: number): Promise<Utilisateur | null> {
-    return await this.utilisateurRepository.findOne({
+  async findOne(id: number): Promise<any> {
+    const user = await this.utilisateurRepository.findOne({
       where: { id },
       relations: ['direction', 'compte', 'compte.profile'],
     });
+
+    if (!user) throw new NotFoundException('Non trouvé');
+
+    const countCreatedCourriers = await this.courrierRepository.count({
+      where: { utilisateur: user },
+    });
+
+    const countModifiedCourriers = await this.courrierRepository.count({
+      where: {
+        modifier_par: user,
+      },
+    });
+
+    return {
+      ...user,
+      countCourriers: countCreatedCourriers,
+      countCodifiedCourriers: countModifiedCourriers,
+    };
   }
 
   async findOneByCin(cin: string): Promise<Utilisateur | null> {

@@ -15,22 +15,8 @@ import Divider from '@mui/material/Divider'
 
 // Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
-import { UtilisateurType } from '@/types/userTypes'
 
-// Vars
-const userData = {
-  firstName: 'Seth',
-  lastName: 'Hallam',
-  userName: '@shallamb',
-  billingEmail: 'shallamb@gmail.com',
-  status: 'active',
-  role: 'Subscriber',
-  taxId: 'Tax-8894',
-  contact: '+1 (234) 464-0600',
-  language: ['English'],
-  country: 'France',
-  useAsBillingAddress: true
-}
+import type { UtilisateurType } from '@/types/userTypes'
 
 const UserDetails = ({ userData }: { userData: UtilisateurType }) => {
   // Vars
@@ -50,7 +36,7 @@ const UserDetails = ({ userData }: { userData: UtilisateurType }) => {
                 <CustomAvatar alt='user-profile' src='/images/avatars/1.png' variant='rounded' size={120} />
                 <Typography variant='h5'>{`${userData.nom} ${userData.prenom}`}</Typography>
               </div>
-              <Chip label='Author' color='secondary' size='small' variant='tonal' />
+              <Chip label={userData.compte?.profile?.libeleFunction} color='secondary' size='small' variant='tonal' />
             </div>
             <div className='flex items-center flex-wrap gap-4'>
               <div className='flex items-center gap-4'>
@@ -58,7 +44,7 @@ const UserDetails = ({ userData }: { userData: UtilisateurType }) => {
                   <i className='tabler-checkbox' />
                 </CustomAvatar>
                 <div>
-                  <Typography variant='h5'>1.23k</Typography>
+                  <Typography variant='h5'>{userData.countCodifiedCourriers}</Typography>
                   <Typography>Les Courriers Modifiers</Typography>
                 </div>
               </div>
@@ -67,7 +53,7 @@ const UserDetails = ({ userData }: { userData: UtilisateurType }) => {
                   <i className='tabler-briefcase' />
                 </CustomAvatar>
                 <div>
-                  <Typography variant='h5'>568</Typography>
+                  <Typography variant='h5'>{userData.countCourriers}</Typography>
                   <Typography>Les Courriers Crées</Typography>
                 </div>
               </div>

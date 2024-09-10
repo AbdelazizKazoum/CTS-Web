@@ -52,7 +52,7 @@ const viewCourrier = (Component: React.ComponentType<any>) => {
         courrierFile={document}
         mode='view'
         onSubmit={onSubmit}
-        title='Modifier courrier'
+        title='Visualiser le courrier'
         buttonText='Modfier le courrier'
         courrierData={selectedCourrier}
         file={file}

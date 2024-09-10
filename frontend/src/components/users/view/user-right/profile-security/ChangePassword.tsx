@@ -16,17 +16,17 @@ import Button from '@mui/material/Button'
 
 // Component Imports
 import CustomTextField from '@core/components/mui/TextField'
-import { CompteType, ProfileType } from '@/types/userTypes'
+
 import { FormHelperText } from '@mui/material'
+
+import type { CompteType } from '@/types/userTypes'
 
 const ChangePassword = ({
   compte,
-  updateCompte,
-  profiles
+  updateCompte
 }: {
   compte: CompteType
 
-  profiles: ProfileType[]
   updateCompte: (comteData: CompteType) => Promise<any>
   loading: boolean
 }) => {
@@ -61,18 +61,18 @@ const ChangePassword = ({
 
   return (
     <>
-      <CardHeader title='Change Password' />
+      <CardHeader title='Changer le Mot de Passe' />
       <CardContent className='flex flex-col gap-4'>
         <Alert icon={false} severity='warning' onClose={() => {}}>
-          <AlertTitle>Ensure that these requirements are met</AlertTitle>
-          Minimum 8 characters long, uppercase & symbol
+          <AlertTitle>Assurez-vous que ces exigences sont respectées</AlertTitle>
+          Minimum de 8 caractères, avec une majuscule et un symbole
         </Alert>
         <form>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Password'
+                label='Mot de passe'
                 error={!isMatch}
                 type={isPasswordShown ? 'text' : 'password'}
                 value={pass}
@@ -100,7 +100,7 @@ const ChangePassword = ({
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Confirm Password'
+                label='Confirmer le mot de passe'
                 type={isConfirmPasswordShown ? 'text' : 'password'}
                 value={confirmPass}
                 error={!isMatch}
@@ -129,8 +129,8 @@ const ChangePassword = ({
             </Grid>
 
             <Grid item xs={12} className='flex gap-4'>
-              <Button onClick={updatePass} variant='contained'>
-                Change Password
+              <Button disabled={sending} onClick={updatePass} variant='contained'>
+                {sending ? 'Chargment...' : 'Mettre à jour le mot de passe'}
               </Button>
             </Grid>
           </Grid>

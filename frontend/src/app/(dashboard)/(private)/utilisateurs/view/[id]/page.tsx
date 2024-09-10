@@ -28,7 +28,7 @@ const tabContentList = (userData: UtilisateurType): { [key: string]: ReactElemen
 })
 
 const UserViewTab = ({ params }: { params: { id: number } }) => {
-  const { getUserById, selectedUser } = UseUtilisateurStore()
+  const { getUserById, selectedUser, loading, error } = UseUtilisateurStore()
 
   useEffect(() => {
     ;(async () => {
@@ -37,17 +37,26 @@ const UserViewTab = ({ params }: { params: { id: number } }) => {
   }, [getUserById, params.id])
 
   return (
-    <Grid container spacing={6}>
-      {selectedUser ? (
+    <Grid className='h-full' container spacing={6}>
+      {!loading ? (
         <>
-          {' '}
-          <Grid item xs={12} lg={4} md={5}>
-            <UserLeftOverview userData={selectedUser} />
-          </Grid>
-          <Grid item xs={12} lg={8} md={7}>
-            {/* <UserRight tabContentList={tabContentList(data)} /> */}
-            <UserRight tabContentList={tabContentList(selectedUser)} />
-          </Grid>
+          {selectedUser ? (
+            <>
+              {' '}
+              <Grid item xs={12} lg={4} md={5}>
+                <UserLeftOverview userData={selectedUser} />
+              </Grid>
+              <Grid item xs={12} lg={8} md={7}>
+                {/* <UserRight tabContentList={tabContentList(data)} /> */}
+                <UserRight tabContentList={tabContentList(selectedUser)} />
+              </Grid>
+            </>
+          ) : (
+            <div className='flex flex-col gap-3 justify-center items-center  w-full h-full text-2xl '>
+              <i className='tabler-alert-circle text-red-600 text-2xl ' />
+              {error ? error : 'Non trouvé'}
+            </div>
+          )}
         </>
       ) : (
         <div className=' flex justify-center w-full h-full '>

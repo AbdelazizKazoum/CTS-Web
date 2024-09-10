@@ -2,6 +2,7 @@ import { Roles } from './../auth/decorators/roles.decorators';
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -35,8 +36,12 @@ export class UtilisateurController {
   }
 
   @Get('/:id')
-  @Roles(Role.Admin, Role.secretariat)
-  async getUser(@Param('id') id: number): Promise<Utilisateur> {
+  async getUser(@Param('id') id: number, @Req() req): Promise<Utilisateur> {
+    const user = req.user;
+    if (user.role !== Role.Admin) {
+      if (id != user.id) throw new ForbiddenException('Forbidden ressource');
+    }
+
     return await this.utilisateurService.findOne(id);
   }
 

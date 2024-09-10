@@ -36,13 +36,13 @@ const ChangeRole = ({
 
   return (
     <>
-      <CardHeader title='Change Role' />{' '}
+      <CardHeader title="Modifier la Fonction de l'Utilisateur" />{' '}
       <CardContent className='flex flex-col gap-4'>
         <div className='flex items-end gap-4 flex-col sm:flex-row'>
           <CustomTextField
             select
             fullWidth
-            label='Choisir la fonction'
+            label='Attribuer un Rôle'
             defaultValue={compte?.profile?.id}
             id='user-view-plans-select'
             value={profile}

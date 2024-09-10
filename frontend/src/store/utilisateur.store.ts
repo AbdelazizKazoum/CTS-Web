@@ -23,7 +23,7 @@ export interface UtilisateurState {
 export const UseUtilisateurStore = create<UtilisateurState>(set => ({
   users: [],
   selectedUser: null,
-  loading: false,
+  loading: true,
   error: '',
 
   fetchUsers: async () => {
@@ -49,12 +49,13 @@ export const UseUtilisateurStore = create<UtilisateurState>(set => ({
       const { data } = await api.get(`/utilisateur/${id}`)
 
       set({ selectedUser: data })
-      set({ loading: false })
 
       return data
-    } catch (error) {
-      console.log(error)
-      set({ loading: false, users: [] })
+    } catch (error: any) {
+      toast.error(error.response ? error.response.data.message : error.message)
+      set({ users: [] })
+    } finally {
+      set({ loading: false })
     }
   },
 

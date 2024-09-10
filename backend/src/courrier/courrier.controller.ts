@@ -43,7 +43,6 @@ export class CourrierController {
       storage: diskStorage({
         destination: './uploads',
         filename: (req: Request, file, callback) => {
-          console.log('req :', req.body.formData);
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);
           const randomName = Array(10)
@@ -77,9 +76,6 @@ export class CourrierController {
   ) {
     const courrier = JSON.parse(data);
 
-    console.log('courrier data ;', courrier);
-    console.log('file :', file);
-
     const newCourrier = this.courrierService.create({
       ...courrier,
       utilisateur: req.user,
@@ -95,7 +91,6 @@ export class CourrierController {
   async findFile(@Param('filePath') filePath: string, @Res() res: Response) {
     const fileFullPath = join(process.cwd(), 'uploads', filePath);
 
-    console.log('test filepath :', fileFullPath);
     try {
       await stat(fileFullPath);
     } catch (error) {

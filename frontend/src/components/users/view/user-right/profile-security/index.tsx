@@ -17,7 +17,6 @@ import ChangeRole from './ChangeRole'
 import type { UtilisateurType } from '@/types/userTypes'
 
 import { useCompteStore } from '@/store/compte.store'
-import { UseUtilisateurStore } from '@/store/utilisateur.store'
 
 const SecurityTab = ({ userData }: { userData: UtilisateurType }) => {
   const { updateCompte, loading, fetchProfiles, profiles } = useCompteStore()
@@ -39,18 +38,16 @@ const SecurityTab = ({ userData }: { userData: UtilisateurType }) => {
             <div className='h-full'>
               {!loading ? (
                 <>
-                  <ChangeRole
-                    profiles={profiles || []}
-                    compte={userData.compte}
-                    updateCompte={updateCompte}
-                    loading={loading}
-                  />
-                  <ChangePassword
-                    profiles={profiles || []}
-                    compte={userData.compte}
-                    updateCompte={updateCompte}
-                    loading={loading}
-                  />
+                  {userData.compte.profile?.libeleFunction === 'Administrateur' && (
+                    <ChangeRole
+                      profiles={profiles || []}
+                      compte={userData.compte}
+                      updateCompte={updateCompte}
+                      loading={loading}
+                    />
+                  )}
+
+                  <ChangePassword compte={userData.compte} updateCompte={updateCompte} loading={loading} />
                 </>
               ) : (
                 <div className='p-10'>

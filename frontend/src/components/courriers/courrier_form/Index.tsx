@@ -60,7 +60,13 @@ const Index = ({
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CourrierHeader buttonText={buttonText} title={title} loading={loading} submitFormClick={submitFormClick} />
+        <CourrierHeader
+          mode={mode}
+          buttonText={buttonText}
+          title={title}
+          loading={loading}
+          submitFormClick={submitFormClick}
+        />
       </Grid>
 
       <Grid item xs={12} md={12}>

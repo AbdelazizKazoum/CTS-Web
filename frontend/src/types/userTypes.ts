@@ -15,6 +15,9 @@ export interface UtilisateurType {
   compte?: CompteType | null
 
   file: File
+
+  countCourriers?: number
+  countCodifiedCourriers?: number
 }
 
 export interface CompteType {
