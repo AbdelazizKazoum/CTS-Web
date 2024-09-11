@@ -137,7 +137,7 @@ const UserDropdown = () => {
                     }}
                   >
                     <i className='tabler-user text-[22px]' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                    <Typography color='text.primary'>Mon profil</Typography>
                   </MenuItem>
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='tabler-settings text-[22px]' />
@@ -153,7 +153,7 @@ const UserDropdown = () => {
                       onClick={handleUserLogout}
                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
-                      Logout
+                      Se déconnecter
                     </Button>
                   </div>
                 </MenuList>
