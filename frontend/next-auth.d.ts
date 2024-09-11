@@ -2,10 +2,12 @@ import 'next-auth/jwt'
 
 import type { DefaultSession } from 'next-auth'
 
+import type { DefaultJWT } from 'next-auth/jwt'
+
 import type { AuthType } from '@/types/authTypes'
 
 declare module 'next-auth/jwt' {
-  type JWT = AuthType
+  type JWT = AuthType & DefaultJWT
 }
 
 declare module 'next-auth' {
@@ -17,7 +19,9 @@ declare module 'next-auth' {
       direction: string
 
       role: string
-    } & DefaultSession['user']
+    } & DefaultSession['']
+
+    expires?: string
 
     accessToken: string
   }

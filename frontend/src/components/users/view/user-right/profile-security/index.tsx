@@ -9,6 +9,8 @@ import { Card, Skeleton } from '@mui/material'
 
 import Grid from '@mui/material/Grid'
 
+import { useSession } from 'next-auth/react'
+
 import NoCompte from './NoCompte'
 
 // Component Imports
@@ -19,7 +21,10 @@ import type { UtilisateurType } from '@/types/userTypes'
 import { useCompteStore } from '@/store/compte.store'
 
 const SecurityTab = ({ userData }: { userData: UtilisateurType }) => {
+  // Hooks
   const { updateCompte, loading, fetchProfiles, profiles } = useCompteStore()
+
+  const { data: session } = useSession()
 
   useEffect(
     function () {
@@ -38,7 +43,7 @@ const SecurityTab = ({ userData }: { userData: UtilisateurType }) => {
             <div className='h-full'>
               {!loading ? (
                 <>
-                  {userData.compte.profile?.libeleFunction === 'Administrateur' && (
+                  {session?.user.role === 'Administrateur' && (
                     <ChangeRole
                       profiles={profiles || []}
                       compte={userData.compte}
