@@ -136,9 +136,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
             <div className='flex flex-col'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.nom}
-              </Typography>
+              <Typography className='font-medium'>{row.original.nom}</Typography>
             </div>
           </div>
         )
@@ -147,9 +145,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
         header: 'Prenom',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.prenom}
-            </Typography>
+            <Typography className='capitalize'>{row.original.prenom}</Typography>
           </div>
         )
       }),
@@ -157,9 +153,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
         header: 'Matricule',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.matricule}
-            </Typography>
+            <Typography className='capitalize'>{row.original.matricule}</Typography>
           </div>
         )
       }),
@@ -167,9 +161,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
         header: 'Direction',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.direction?.nom_direction}
-            </Typography>
+            <Typography className='capitalize'>{row.original.direction?.nom_direction}</Typography>
           </div>
         )
       }),
@@ -177,9 +169,7 @@ export const Table = ({ tableData }: { tableData: UtilisateurType[] | null }) =>
         header: 'Compte',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.compte}
-            </Typography>
+            <Typography className='capitalize'>{row.original?.compte}</Typography>
           </div>
         )
       }),
