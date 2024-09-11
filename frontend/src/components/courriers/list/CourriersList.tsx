@@ -2,8 +2,6 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 
-import Link from 'next/link'
-
 import { useRouter } from 'next/navigation'
 
 import type { TextFieldProps } from '@mui/material'
@@ -40,6 +38,8 @@ import TableFilters from './tableFilters'
 
 import type { CourrierType } from '@/types/courrierTypes'
 import { useCourrierStore } from '@/store/courrier.store'
+import CustomAvatar from '@/@core/components/mui/Avatar'
+import { getInitials } from '@/utils/getInitials'
 
 type CourriersTypeWithAction = CourrierType & {
   action?: string
@@ -109,6 +109,20 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
     return <CustomTextField {...props} value={value} onChange={e => setValue(e.target.value)} />
   }
 
+  const getAvatar = (params: Pick<any, 'avatar' | 'name'>) => {
+    const { avatar, name } = params
+
+    if (avatar) {
+      return <CustomAvatar src={avatar} skin='light' size={30} />
+    } else {
+      return (
+        <CustomAvatar skin='light' size={30}>
+          {getInitials(name as string)}
+        </CustomAvatar>
+      )
+    }
+  }
+
   const columns = useMemo<ColumnDef<CourriersTypeWithAction, any>[]>(
     () => [
       // {
@@ -134,13 +148,16 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
       //   )
       // },
       columnHelper.accessor('id', {
-        header: 'Id',
-        cell: ({ row }) => (
+        header: '',
+        cell: ({}) => (
           <div className='flex items-center gap-4'>
-            <div className='flex flex-col'>
-              <Typography color='text.primary' className='font-medium'>
-                {row.original.id}
-              </Typography>
+            <div className='flex items-center gap-3'>
+              {getAvatar({ avatar: '/images/icons/pdf.png', name: 'pdf' })}
+              {/* <div className='flex flex-col'>
+                <Typography className='font-medium' color='text.primary'>
+                  {row.original.id}
+                </Typography>
+              </div> */}
             </div>
           </div>
         )
@@ -149,7 +166,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Date arrivée',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
+            <Typography className='capitalize'>
               {row.original.date_arrivee && new Date(row.original.date_arrivee).toLocaleDateString()}
             </Typography>
           </div>
@@ -159,9 +176,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Pré Référence',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original.pre_reference}
-            </Typography>
+            <Typography className='capitalize'>{row.original.pre_reference}</Typography>
           </div>
         )
       }),
@@ -169,7 +184,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Date Pré Référence',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
+            <Typography className='capitalize'>
               {row.original.date_pre_reference && new Date(row.original.date_pre_reference).toLocaleDateString()}
             </Typography>
           </div>
@@ -179,9 +194,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Origine',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.origine}
-            </Typography>
+            <Typography className='capitalize'>{row.original?.origine}</Typography>
           </div>
         )
       }),
@@ -190,9 +203,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Référence',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.reference}
-            </Typography>
+            <Typography className='capitalize'>{row.original?.reference}</Typography>
           </div>
         )
       }),
@@ -201,7 +212,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Date courrier',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
+            <Typography className='capitalize'>
               {row.original?.date_courrier && new Date(row.original?.date_courrier).toLocaleDateString()}
             </Typography>
           </div>
@@ -212,9 +223,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Objet',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.objet}
-            </Typography>
+            <Typography className='capitalize'>{row.original?.objet}</Typography>
           </div>
         )
       }),
@@ -223,9 +232,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Classement',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
-              {row.original?.classement}
-            </Typography>
+            <Typography className='capitalize'>{row.original?.classement}</Typography>
           </div>
         )
       }),
@@ -234,7 +241,7 @@ export const CourriersList = ({ tableData }: { tableData: CourrierType[] | null 
         header: 'Date Traitment',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Typography className='capitalize' color='text.primary'>
+            <Typography className='capitalize'>
               {row.original?.date_traitement && new Date(row.original?.date_traitement).toLocaleDateString()}
             </Typography>
           </div>

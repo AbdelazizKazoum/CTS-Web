@@ -29,7 +29,7 @@ export const useCompteStore = create<CompteStateType>(set => ({
 
       set({ status: 'fulfilled' })
 
-      toast.success('La fonction a été modifier avec succès')
+      toast.success('Compte a été modifier avec succès')
 
       return res.data
     } catch (error: any) {
