@@ -94,7 +94,9 @@ export class CourrierService {
         lastYear,
       );
 
-      return { directionsStatistics, totalCourriers };
+      const statisticsByType = await this.getCourriersCountByType(lastYear);
+
+      return { directionsStatistics, totalCourriers, statisticsByType };
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -104,45 +106,51 @@ export class CourrierService {
     const lastYear = dayjs().subtract(1, 'year').toDate();
 
     try {
-      const countCourriersInterne = await this.courrierRepository.count({
-        where: {
-          date_courrier: MoreThan(lastYear),
-          status: 'INTERNE',
-        },
-      });
+      const statisticsByType = await this.getCourriersCountByType(lastYear);
 
-      const countCourriersExterne = await this.courrierRepository.count({
-        where: {
-          date_courrier: MoreThan(lastYear),
-          status: 'EXTERNE',
-        },
-      });
-
-      const countCourriersSortant = await this.courrierRepository.count({
-        where: {
-          date_courrier: MoreThan(lastYear),
-          type: 'SORTANT',
-        },
-      });
-
-      const countCourriersEntrant = await this.courrierRepository.count({
-        where: {
-          date_courrier: MoreThan(lastYear),
-          type: 'ENTRANT',
-        },
-      });
-
-      return {
-        sortant: countCourriersSortant,
-        entrant: countCourriersEntrant,
-        externe: countCourriersExterne,
-        interne: countCourriersInterne,
-      };
+      return statisticsByType;
     } catch (error) {
       throw new InternalServerErrorException();
     }
   }
 
+  // Count the nomber of courriers for each direction in the database and return an object with the direction name and the count of courriers
+  async getCourriersCountByType(lastYear) {
+    const countCourriersInterne = await this.courrierRepository.count({
+      where: {
+        date_courrier: MoreThan(lastYear),
+        status: 'INTERNE',
+      },
+    });
+
+    const countCourriersExterne = await this.courrierRepository.count({
+      where: {
+        date_courrier: MoreThan(lastYear),
+        status: 'EXTERNE',
+      },
+    });
+
+    const countCourriersSortant = await this.courrierRepository.count({
+      where: {
+        date_courrier: MoreThan(lastYear),
+        type: 'SORTANT',
+      },
+    });
+
+    const countCourriersEntrant = await this.courrierRepository.count({
+      where: {
+        date_courrier: MoreThan(lastYear),
+        type: 'ENTRANT',
+      },
+    });
+
+    return {
+      sortant: countCourriersSortant,
+      entrant: countCourriersEntrant,
+      externe: countCourriersExterne,
+      interne: countCourriersInterne,
+    };
+  }
   // Count the nomber of courriers for each direction in the database and return an object with the direction name and the count of courriers
   async getCourriersCountByDirection(directions: Direction[], lastYear) {
     let directionsStatistics = [];

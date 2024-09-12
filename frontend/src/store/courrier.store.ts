@@ -24,11 +24,15 @@ interface CourrierStateType {
   getStatistics: () => Promise<CourriersStatistics>
 }
 
-export const useCourrierStore = create<CourrierStateType>(set => ({
+export const useCourrierStore = create<CourrierStateType>((set, get) => ({
   courriers: null,
   statistics: {
     directionsStatistics: {},
-    totalCourriers: 0
+    totalCourriers: 0,
+    sortant: 0,
+    entrant: 0,
+    externe: 0,
+    interne: 0
   },
   status: 'Idle',
   loading: true,
@@ -100,6 +104,7 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
     }
   },
 
+  // fetch courriers
   getCourrier: async (id: number) => {
     try {
       set({ loading: true })
@@ -119,6 +124,7 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
     }
   },
 
+  // get files
   getFile: async (filePath: string) => {
     try {
       set({ loading: true })
@@ -151,12 +157,37 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
     }
   },
 
+  // get statistics
   getStatistics: async () => {
     try {
       set({ loading: true })
       const response = await api.get('/courrier/statistics/total')
 
       set({ statistics: response.data })
+      set({ status: 'success' })
+
+      return response.data
+    } catch (error: any) {
+      set({ status: 'rejected' })
+      toast.error(error.message ? error.message : error.data.message)
+    } finally {
+      set({ loading: false })
+    }
+  },
+
+  // get statistics
+  getStatisticsByType: async () => {
+    try {
+      set({ loading: true })
+      const statistics = get().statistics
+      const response = await api.get('/courrier/statistics/type')
+
+      set({
+        statistics: {
+          ...statistics,
+          ...response.data
+        }
+      })
       set({ status: 'success' })
 
       return response.data
