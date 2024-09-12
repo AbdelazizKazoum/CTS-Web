@@ -4,7 +4,7 @@
 
 import RecentCourriers from '@/components/overview/RecentCourriers'
 import RecievedCourriers from '@/components/overview/RecievedCourriers '
-import BarChartCountCourriers from '@/components/overview/statistics/BarChartCountCourriers'
+import CountCourriersByTypes from '@/components/overview/statistics/CountCourriersByTypes'
 import CourriesTotalCount from '@/components/overview/statistics/CourriesTotalCount'
 import StatisticsCard from '@/components/overview/statistics/StatisticsCard'
 import Grid from '@mui/material/Grid'
@@ -23,18 +23,8 @@ const Page = () => {
         <StatisticsCard />
       </Grid>
 
-      <Grid item xs={12} md={6} lg={6} xl={3}>
-        <BarChartCountCourriers title='Courriers Externes' frequency='Rapport Mensuel' />
-      </Grid>
-      <Grid item xs={12} md={6} lg={6} xl={3}>
-        <BarChartCountCourriers title='Courriers Internes' frequency='Rapport Mensuel' />
-      </Grid>
-      <Grid item xs={12} md={6} lg={6} xl={3}>
-        <BarChartCountCourriers title='Courriers Sortants' frequency='Rapport Mensuel' />
-      </Grid>
-      <Grid item xs={12} md={6} lg={6} xl={3}>
-        <BarChartCountCourriers title='Courriers Entrants' frequency='Rapport Mensuel' />
-      </Grid>
+      <CountCourriersByTypes />
+
       <Grid item xs={12} sm={6} lg={6}>
         <RecentCourriers />
       </Grid>

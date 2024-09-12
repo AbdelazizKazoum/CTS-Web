@@ -39,8 +39,10 @@ export interface CourrierType {
 export interface CourriersStatistics {
   directionsStatistics: any
   totalCourriers: number
-  sortant: number
-  entrant: number
-  externe: number
-  interne: number
+  statisticsByType: {
+    sortant: number
+    entrant: number
+    externe: number
+    interne: number
+  }
 }

@@ -1,134 +1,58 @@
-/* eslint-disable import/no-unresolved */
 'use client'
 
-// Next Imports
-import dynamic from 'next/dynamic'
-
 // MUI Imports
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
+import MuiCard from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
-import { useTheme } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+import type { CardProps } from '@mui/material/Card'
 
 // Third-party Imports
-import type { ApexOptions } from 'apexcharts'
+import classnames from 'classnames'
 
-// Styled Component Imports
-const AppReactApexCharts = dynamic(() => import('@/lib/styles/AppReactApexCharts'))
+// Types Imports
+import type { ThemeColor } from '@core/types'
 
-const series = [{ data: [32, 52, 72, 94, 116, 94, 72] }]
+// eslint-disable-next-line import/no-unresolved
+import CustomAvatar from '@core/components/mui/Avatar'
 
-const BarChartCountCourriers = ({ title, frequency }: { title: string; frequency: string }) => {
-  // Hook
-  const theme = useTheme()
+import type { CardStatsHorizontalWithBorderProps } from '@/types/pages/widgetTypes'
 
-  // Vars
-  const successColorWithOpacity = 'var(--mui-palette-success-lightOpacity)'
+type Props = CardProps & {
+  color: ThemeColor
+}
 
-  const options: ApexOptions = {
-    chart: {
-      parentHeightOffset: 0,
-      toolbar: { show: false }
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        distributed: true,
-        columnWidth: '55%'
-      }
-    },
-    legend: { show: false },
-    tooltip: { enabled: false },
-    dataLabels: { enabled: false },
-    colors: [
-      successColorWithOpacity,
-      successColorWithOpacity,
-      successColorWithOpacity,
-      successColorWithOpacity,
-      'var(--mui-palette-success-main)',
-      successColorWithOpacity,
-      successColorWithOpacity
-    ],
-    states: {
-      hover: {
-        filter: { type: 'none' }
-      },
-      active: {
-        filter: { type: 'none' }
-      }
-    },
-    grid: {
-      show: false,
-      padding: {
-        top: -15,
-        left: 0,
-        right: 0,
-        bottom: -5
-      }
-    },
-    xaxis: {
-      categories: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-      axisTicks: { show: false },
-      axisBorder: { show: false },
-      tickPlacement: 'on',
-      labels: {
-        style: {
-          colors: 'var(--mui-palette-text-disabled)',
-          fontFamily: theme.typography.fontFamily,
-          fontSize: theme.typography.body2.fontSize as string
-        }
-      }
-    },
-    yaxis: { show: false },
-    responsive: [
-      {
-        breakpoint: 1240,
-        options: {
-          chart: {
-            width: 150
-          }
-        }
-      },
-      {
-        breakpoint: 1200,
-        options: {
-          plotOptions: { bar: { columnWidth: '65%' } },
-          options: {
-            chart: {
-              width: 200
-            }
-          }
-        }
-      },
-      {
-        breakpoint: 410,
-        options: {
-          chart: {
-            width: 150
-          },
-          plotOptions: {
-            bar: { columnWidth: '60%' }
-          }
-        }
-      }
-    ]
+const Card = styled(MuiCard)<Props>(({ color }) => ({
+  transition: 'border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, margin 0.3s ease-in-out',
+  borderBottomWidth: '2px',
+  borderBottomColor: `var(--mui-palette-${color}-darkerOpacity)`,
+  '[data-skin="bordered"] &:hover': {
+    boxShadow: 'none'
+  },
+  '&:hover': {
+    borderBottomWidth: '3px',
+    borderBottomColor: `var(--mui-palette-${color}-main) !important`,
+    boxShadow: 'var(--mui-customShadows-lg)',
+    marginBlockEnd: '-1px'
   }
+}))
+
+const BarChartCountCourriers = (props: CardStatsHorizontalWithBorderProps) => {
+  // Props
+  const { title, stats } = props
 
   return (
-    <Card>
-      <CardContent className='flex justify-between gap-2'>
-        <div className='flex flex-col justify-between'>
-          <div className='flex flex-col gap-y-2'>
-            <Typography variant='h5'>{title}</Typography>
-            <Typography>{frequency}</Typography>
-          </div>
-          <div className='flex flex-col gap-y-2 items-start'>
-            <Typography variant='h3'>356</Typography>
-            <Chip variant='tonal' size='small' color='success' label='+15.2%' />
-          </div>
+    <Card color='primary'>
+      <CardContent className='flex flex-col gap-7 '>
+        <div className='flex items-center gap-4'>
+          <CustomAvatar color='success' skin='light' variant='rounded'>
+            <i className={classnames('tabler-chart-pie-2', 'text-[28px]')} />
+          </CustomAvatar>
+          <Typography variant='h4'>{stats}</Typography>
         </div>
-        <AppReactApexCharts type='bar' width={170} height={172} series={series} options={options} />
+        <div className='flex flex-col gap-4'>
+          <Typography>{title}</Typography>
+        </div>
       </CardContent>
     </Card>
   )

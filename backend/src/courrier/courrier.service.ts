@@ -35,8 +35,12 @@ export class CourrierService {
         'utilisateur.compte.profile',
         'modifier_par',
       ],
+      order: {
+        date_courrier: 'DESC',
+      },
     });
   }
+
   async findByUserRole(role: string) {
     return await this.courrierRepository.find({
       relations: [
@@ -53,6 +57,27 @@ export class CourrierService {
             },
           },
         },
+      },
+      order: {
+        date_courrier: 'DESC',
+      },
+    });
+  }
+
+  async getCourriersRecu(direction: string) {
+    return await this.courrierRepository.find({
+      relations: [
+        'utilisateur',
+        'utilisateur.direction',
+        'utilisateur.compte.profile',
+        'modifier_par',
+      ],
+      where: {
+        destinataire: direction,
+        status: 'INTERNE',
+      },
+      order: {
+        date_courrier: 'DESC',
       },
     });
   }
@@ -97,18 +122,6 @@ export class CourrierService {
       const statisticsByType = await this.getCourriersCountByType(lastYear);
 
       return { directionsStatistics, totalCourriers, statisticsByType };
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async getStatisticsByCourrierType() {
-    const lastYear = dayjs().subtract(1, 'year').toDate();
-
-    try {
-      const statisticsByType = await this.getCourriersCountByType(lastYear);
-
-      return statisticsByType;
     } catch (error) {
       throw new InternalServerErrorException();
     }

@@ -53,7 +53,7 @@ const CourriesTotalCount = () => {
           </Grid>
         </Grid>
       ) : (
-        <div className='  w-ful h-full'>
+        <div className='w-ful h-full'>
           <Skeleton variant='rectangular' className='h-full' />
         </div>
       )}
