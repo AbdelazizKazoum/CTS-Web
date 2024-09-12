@@ -3,13 +3,18 @@ import { CreateCourrierDto } from './dto/create-courrier.dto';
 import { UpdateCourrierDto } from './dto/update-courrier.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Courrier } from 'src/entities/courrier.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
+import * as dayjs from 'dayjs';
+import { Direction } from 'src/entities/direction.entity';
 
 @Injectable()
 export class CourrierService {
   constructor(
     @InjectRepository(Courrier)
     private courrierRepository: Repository<Courrier>,
+
+    @InjectRepository(Direction)
+    private directionRepository: Repository<Direction>,
   ) {}
 
   async create(createCourrierDto: CreateCourrierDto) {
@@ -69,5 +74,101 @@ export class CourrierService {
 
   remove(id: number) {
     return `This action removes a #${id} courrier`;
+  }
+
+  async getStatistics() {
+    //vars
+    const lastYear = dayjs().subtract(1, 'year').toDate();
+    const directions = await this.directionRepository.find();
+    let directionsStatistics = [];
+
+    try {
+      const totalCourriers = await this.courrierRepository.count({
+        where: {
+          date_courrier: MoreThan(lastYear),
+        },
+      });
+
+      directionsStatistics = await this.getCourriersCountByDirection(
+        directions,
+        lastYear,
+      );
+
+      return { directionsStatistics, totalCourriers };
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getStatisticsByCourrierType() {
+    const lastYear = dayjs().subtract(1, 'year').toDate();
+
+    try {
+      const countCourriersInterne = await this.courrierRepository.count({
+        where: {
+          date_courrier: MoreThan(lastYear),
+          status: 'INTERNE',
+        },
+      });
+
+      const countCourriersExterne = await this.courrierRepository.count({
+        where: {
+          date_courrier: MoreThan(lastYear),
+          status: 'EXTERNE',
+        },
+      });
+
+      const countCourriersSortant = await this.courrierRepository.count({
+        where: {
+          date_courrier: MoreThan(lastYear),
+          type: 'SORTANT',
+        },
+      });
+
+      const countCourriersEntrant = await this.courrierRepository.count({
+        where: {
+          date_courrier: MoreThan(lastYear),
+          type: 'ENTRANT',
+        },
+      });
+
+      return {
+        sortant: countCourriersSortant,
+        entrant: countCourriersEntrant,
+        externe: countCourriersExterne,
+        interne: countCourriersInterne,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // Count the nomber of courriers for each direction in the database and return an object with the direction name and the count of courriers
+  async getCourriersCountByDirection(directions: Direction[], lastYear) {
+    let directionsStatistics = [];
+
+    if (directions.length > 0) {
+      for (const element of directions) {
+        const countThisDirection = await this.courrierRepository.count({
+          where: {
+            date_courrier: MoreThan(lastYear),
+            utilisateur: {
+              direction: {
+                nom_direction: element.nom_direction,
+              },
+            },
+          },
+        });
+
+        directionsStatistics.push({
+          nom: element.nom_direction,
+          count: countThisDirection,
+        });
+      }
+
+      return directionsStatistics;
+    } else {
+      return [];
+    }
   }
 }

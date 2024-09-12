@@ -5,10 +5,11 @@ import { toast } from 'react-toastify'
 
 import api from '@/lib/api'
 
-import type { CourrierType } from '@/types/courrierTypes'
+import type { CourriersStatistics, CourrierType } from '@/types/courrierTypes'
 
 interface CourrierStateType {
   courriers: CourrierType[] | null
+  statistics: CourriersStatistics
   status: string
   loading: boolean
   selectedCourrier: CourrierType | null
@@ -20,12 +21,17 @@ interface CourrierStateType {
   getCourrier: (id: number) => Promise<CourrierType>
   getFile: (filePath: string) => Promise<File | null>
   setSelectedCourrier: (courrier: CourrierType) => void
+  getStatistics: () => Promise<CourriersStatistics>
 }
 
 export const useCourrierStore = create<CourrierStateType>(set => ({
   courriers: null,
+  statistics: {
+    directionsStatistics: {},
+    totalCourriers: 0
+  },
   status: 'Idle',
-  loading: false,
+  loading: true,
   selectedCourrier: null,
   document: null,
 
@@ -134,14 +140,29 @@ export const useCourrierStore = create<CourrierStateType>(set => ({
       set({ status: 'success' })
       set({ document: file })
 
-      console.log(' generate file api :', file)
-
       return file
     } catch (error: any) {
       set({ status: 'rejected' })
       toast.error(error.message ? error.message : error.data.message)
 
       return null
+    } finally {
+      set({ loading: false })
+    }
+  },
+
+  getStatistics: async () => {
+    try {
+      set({ loading: true })
+      const response = await api.get('/courrier/statistics/total')
+
+      set({ statistics: response.data })
+      set({ status: 'success' })
+
+      return response.data
+    } catch (error: any) {
+      set({ status: 'rejected' })
+      toast.error(error.message ? error.message : error.data.message)
     } finally {
       set({ loading: false })
     }

@@ -35,3 +35,8 @@ export interface CourrierType {
 
   filePath?: string
 }
+
+export interface CourriersStatistics {
+  directionsStatistics: any
+  totalCourriers: number
+}

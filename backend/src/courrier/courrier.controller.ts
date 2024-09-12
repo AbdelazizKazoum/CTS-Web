@@ -121,6 +121,16 @@ export class CourrierController {
     return this.courrierService.findOne(+id);
   }
 
+  @Get('statistics/total')
+  getStatistics() {
+    return this.courrierService.getStatistics();
+  }
+
+  @Get('statistics/type')
+  getStatisticsByCourrierType() {
+    return this.courrierService.getStatisticsByCourrierType();
+  }
+
   @Patch(':id')
   @Roles(Role.Admin, Role.secretariat)
   @UseInterceptors(
