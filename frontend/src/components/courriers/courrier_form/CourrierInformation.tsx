@@ -247,7 +247,7 @@ const CourrierInformation = ({
                 render={({ field }) => (
                   <CustomTextField select fullWidth label='Status' {...field} error={Boolean(errors.status)}>
                     <MenuItem value=''>Selectionner statut</MenuItem>
-                    <MenuItem value='ENTRANT'>INTERNE</MenuItem>
+                    <MenuItem value='INTERNE'>INTERNE</MenuItem>
                     <MenuItem value='EXTERNE'>EXTERNE</MenuItem>
                   </CustomTextField>
                 )}
