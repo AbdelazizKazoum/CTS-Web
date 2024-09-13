@@ -17,6 +17,7 @@ export class CourrierService {
     private directionRepository: Repository<Direction>,
   ) {}
 
+  // Ceate new courrier
   async create(createCourrierDto: CreateCourrierDto) {
     try {
       const newCourrier =
@@ -27,6 +28,7 @@ export class CourrierService {
     }
   }
 
+  // Fetch all courriers
   async findAll() {
     return await this.courrierRepository.find({
       relations: [
@@ -41,6 +43,7 @@ export class CourrierService {
     });
   }
 
+  // Search by user fonction
   async findByUserRole(role: string) {
     return await this.courrierRepository.find({
       relations: [
@@ -64,6 +67,7 @@ export class CourrierService {
     });
   }
 
+  // Recieved courriers
   async getCourriersRecu(direction: string) {
     return await this.courrierRepository.find({
       relations: [
@@ -82,6 +86,7 @@ export class CourrierService {
     });
   }
 
+  // Search
   async findOne(id: number) {
     return await this.courrierRepository.findOne({
       where: { id },
@@ -89,6 +94,7 @@ export class CourrierService {
     });
   }
 
+  // Update
   update(id: number, updateCourrierDto: UpdateCourrierDto) {
     try {
       return this.courrierRepository.update(id, updateCourrierDto);
@@ -97,10 +103,12 @@ export class CourrierService {
     }
   }
 
+  // Remove
   remove(id: number) {
     return `This action removes a #${id} courrier`;
   }
 
+  // Statistics
   async getStatistics() {
     //vars
     const lastYear = dayjs().subtract(1, 'year').toDate();
@@ -108,17 +116,20 @@ export class CourrierService {
     let directionsStatistics = [];
 
     try {
+      // Count all created courriers
       const totalCourriers = await this.courrierRepository.count({
         where: {
           date_courrier: MoreThan(lastYear),
         },
       });
 
+      // Statistics By directions
       directionsStatistics = await this.getCourriersCountByDirection(
         directions,
         lastYear,
       );
 
+      // Statistics By courrier type
       const statisticsByType = await this.getCourriersCountByType(lastYear);
 
       return { directionsStatistics, totalCourriers, statisticsByType };
@@ -136,6 +147,7 @@ export class CourrierService {
       },
     });
 
+    // Externe
     const countCourriersExterne = await this.courrierRepository.count({
       where: {
         date_courrier: MoreThan(lastYear),
@@ -143,6 +155,7 @@ export class CourrierService {
       },
     });
 
+    // Sortant
     const countCourriersSortant = await this.courrierRepository.count({
       where: {
         date_courrier: MoreThan(lastYear),
@@ -150,6 +163,7 @@ export class CourrierService {
       },
     });
 
+    // Entrant
     const countCourriersEntrant = await this.courrierRepository.count({
       where: {
         date_courrier: MoreThan(lastYear),

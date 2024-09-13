@@ -34,7 +34,7 @@ const CountCourriersByTypes = () => {
                 <div className='w-ful h-[200px]'>
                   <Skeleton variant='rectangular' className='h-full' />
                 </div>
-              </Card>{' '}
+              </Card>
             </Grid>
           ))}
         </>

@@ -33,21 +33,23 @@ const StatisticsCard = () => {
               </Typography>
             }
           />
-          <CardContent className='flex justify-between flex-wrap gap-4 md:pbs-10 max-md:pbe-6 max-[1060px]:pbe-[74px] max-[1200px]:pbe-[52px] max-[1320px]:pbe-[74px] max-[1501px]:pbe-[52px]'>
-            <Grid container spacing={4}>
-              {statistics.directionsStatistics.map((item: any, index: number) => (
-                <Grid key={index} item xs className='flex items-center gap-4'>
-                  <CustomAvatar color='primary' variant='rounded' size={40} skin='light'>
-                    <i className='tabler-chart-pie-2'></i>
-                  </CustomAvatar>
-                  <div className='flex flex-col'>
-                    <Typography variant='h5'>{item.count}</Typography>
-                    <Typography variant='body2'>{item.nom}</Typography>
-                  </div>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
+          {statistics.directionsStatistics.length > 0 && (
+            <CardContent className='flex justify-between flex-wrap gap-4 md:pbs-10 max-md:pbe-6 max-[1060px]:pbe-[74px] max-[1200px]:pbe-[52px] max-[1320px]:pbe-[74px] max-[1501px]:pbe-[52px]'>
+              <Grid container spacing={4}>
+                {statistics.directionsStatistics?.map((item: any, index: number) => (
+                  <Grid key={index} item xs className='flex items-center gap-4'>
+                    <CustomAvatar color='primary' variant='rounded' size={40} skin='light'>
+                      <i className='tabler-chart-pie-2'></i>
+                    </CustomAvatar>
+                    <div className='flex flex-col'>
+                      <Typography variant='h5'>{item.count}</Typography>
+                      <Typography variant='body2'>{item.nom}</Typography>
+                    </div>
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          )}
         </>
       ) : (
         <div className='  w-ful h-[200px]'>

@@ -22,7 +22,7 @@ import '@/lib/styles/tiptapEditor.css'
 import { Controller } from 'react-hook-form'
 import type { Control, FieldErrors, UseFormHandleSubmit } from 'react-hook-form'
 
-import { FormHelperText, MenuItem } from '@mui/material'
+import { FormHelperText, MenuItem, TextField } from '@mui/material'
 
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
 
@@ -289,7 +289,27 @@ const CourrierInformation = ({
               />
             </Grid>
           </Grid>
-          <Typography className='mbe-1'>Description (Optional)</Typography>
+          <Grid item xs={12} sm={6}>
+            <Typography className='mbe-1'>Description (Optional)</Typography>
+
+            <Controller
+              name='description'
+              control={control}
+              rules={{ required: false }}
+              render={function ({ field }) {
+                return (
+                  <TextField
+                    {...field}
+                    multiline
+                    aria-readonly={readOnly}
+                    fullWidth
+                    placeholder=''
+                    {...(errors.description && { error: true, helperText: 'Ce champ est obligatoire.' })}
+                  />
+                )
+              }}
+            />
+          </Grid>
         </form>
       </CardContent>
     </Card>

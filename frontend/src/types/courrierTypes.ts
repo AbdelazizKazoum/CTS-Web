@@ -29,6 +29,8 @@ export interface CourrierType {
 
   utilisateur: UtilisateurType
 
+  description: string
+
   modifier_par?: UtilisateurType
 
   desciption?: string
@@ -37,7 +39,7 @@ export interface CourrierType {
 }
 
 export interface CourriersStatistics {
-  directionsStatistics: any
+  directionsStatistics: { nom: string; count: string }[]
   totalCourriers: number
   statisticsByType: {
     sortant: number

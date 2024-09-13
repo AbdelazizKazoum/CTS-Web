@@ -4,8 +4,7 @@ import Index from '@/components/courriers/list/Index'
 const Page = () => {
   return (
     <div>
-      {' '}
-      <Index />{' '}
+      <Index />
     </div>
   )
 }

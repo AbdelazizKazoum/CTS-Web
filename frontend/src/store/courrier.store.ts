@@ -8,7 +8,8 @@ import api from '@/lib/api'
 import type { CourriersStatistics, CourrierType } from '@/types/courrierTypes'
 
 interface CourrierStateType {
-  courriers: CourrierType[] | null
+  courriers: CourrierType[]
+  courriersRecu: CourrierType[]
   statistics: CourriersStatistics
   status: string
   loading: boolean
@@ -22,18 +23,22 @@ interface CourrierStateType {
   getFile: (filePath: string) => Promise<File | null>
   setSelectedCourrier: (courrier: CourrierType) => void
   getStatistics: () => Promise<CourriersStatistics>
+  fetchCourriersRecu: () => Promise<CourrierType[]>
 }
 
-export const useCourrierStore = create<CourrierStateType>((set, get) => ({
-  courriers: null,
+export const useCourrierStore = create<CourrierStateType>(set => ({
+  courriers: [],
   statistics: {
-    directionsStatistics: {},
+    directionsStatistics: [],
     totalCourriers: 0,
-    sortant: 0,
-    entrant: 0,
-    externe: 0,
-    interne: 0
+    statisticsByType: {
+      sortant: 0,
+      entrant: 0,
+      externe: 0,
+      interne: 0
+    }
   },
+  courriersRecu: [],
   status: 'Idle',
   loading: true,
   selectedCourrier: null,
@@ -175,19 +180,14 @@ export const useCourrierStore = create<CourrierStateType>((set, get) => ({
     }
   },
 
-  // get statistics
-  getStatisticsByType: async () => {
+  // Get Courriers Internes Reçus
+
+  fetchCourriersRecu: async () => {
     try {
       set({ loading: true })
-      const statistics = get().statistics
-      const response = await api.get('/courrier/statistics/type')
+      const response = await api.get('/courrier/recu')
 
-      set({
-        statistics: {
-          ...statistics,
-          ...response.data
-        }
-      })
+      set({ courriersRecu: response.data })
       set({ status: 'success' })
 
       return response.data

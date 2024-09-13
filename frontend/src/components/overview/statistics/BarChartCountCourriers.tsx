@@ -16,8 +16,6 @@ import type { ThemeColor } from '@core/types'
 // eslint-disable-next-line import/no-unresolved
 import CustomAvatar from '@core/components/mui/Avatar'
 
-import type { CardStatsHorizontalWithBorderProps } from '@/types/pages/widgetTypes'
-
 type Props = CardProps & {
   color: ThemeColor
 }
@@ -37,7 +35,7 @@ const Card = styled(MuiCard)<Props>(({ color }) => ({
   }
 }))
 
-const BarChartCountCourriers = (props: CardStatsHorizontalWithBorderProps) => {
+const BarChartCountCourriers = (props: any) => {
   // Props
   const { title, stats } = props
 
