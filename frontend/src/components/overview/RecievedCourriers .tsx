@@ -5,6 +5,8 @@
 // MUI Imports
 import { useEffect } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -38,7 +40,8 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 })
 
 const RecievedCourriers = () => {
-  const { fetchCourriersRecu, courriersRecu, loading } = useCourrierStore()
+  const { fetchCourriersRecu, courriersRecu, loading, setSelectedCourrier } = useCourrierStore()
+  const router = useRouter()
 
   useEffect(() => {
     ;(async () => {
@@ -77,7 +80,15 @@ const RecievedCourriers = () => {
                     </Typography>
                     <div className='flex items-center gap-2.5 is-fit rounded bg-actionHover plb-[5px] pli-2.5'>
                       <img height={20} alt='invoice.pdf' src='/images/icons/pdf-document.png' />
-                      <Typography className='font-medium'>{item.filePath}</Typography>
+                      <Typography
+                        onClick={() => {
+                          setSelectedCourrier(item)
+                          router.push('/courriers/consulter')
+                        }}
+                        className='font-medium cursor-pointer'
+                      >
+                        {item.filePath}
+                      </Typography>
                     </div>
                   </TimelineContent>
                 </TimelineItem>
